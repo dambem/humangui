@@ -1,4 +1,4 @@
-package dentistApp;
+package dentist;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -69,7 +69,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-import dentistApp.SqlCreation;
+import dentist.SqlCreation;
 
 
 

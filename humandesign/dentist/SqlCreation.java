@@ -1,4 +1,4 @@
-package dentistApp;
+package dentist;
 
 
 import java.sql.Connection;
