@@ -1,66 +1,40 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
-import org.jdatepicker.JDatePanel;
-import org.jdatepicker.JDatePicker;
-import org.jdatepicker.UtilDateModel;
-
-import javax.swing.JMenuBar;
-import java.awt.Panel;
-import javax.swing.JButton;
-import javax.swing.JMenu;
-import javax.swing.JSplitPane;
-import javax.swing.BoxLayout;
-import javax.swing.JMenuItem;
-import java.awt.Component;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import java.awt.GridLayout;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-
-import java.awt.Button;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.CardLayout;
-import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
-import java.awt.Label;
-import javax.swing.JTextPane;
-import javax.swing.JLabel;
-import javax.swing.JToggleButton;
-import javax.swing.JFormattedTextField;
-import javax.swing.JEditorPane;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.Color;
 import java.awt.Font;
-import javax.swing.JPopupMenu;
-import javax.swing.JLayeredPane;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-import dentist.SqlCreation;
-import dentist.Timetable;
-import dentist.Pricing;
+import org.jdatepicker.JDatePanel;
+import org.jdatepicker.UtilDateModel;
+
+import dentistApp.Pricing;
+import dentistApp.SqlCreation;
+import dentistApp.Timetable;
 
 public class MainScreen extends JFrame {
 
