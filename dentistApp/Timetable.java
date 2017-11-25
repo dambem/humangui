@@ -20,6 +20,8 @@ import javax.swing.JMenu;
 import javax.swing.JSplitPane;
 import javax.swing.BoxLayout;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
@@ -210,7 +212,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 			contentPane1.removeAll();
 			
 			JPanel appointmentForm = new JPanel();
-			
+			appointmentForm.setLayout(new GridLayout(0,2));
 			JComboBox<String> type = new JComboBox<String>();
 			type.addItem("Check Up");
 			type.addItem("Hygiene");
@@ -262,8 +264,9 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 			bookApp.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					contentPane1.remove(appointmentForm);
 					
+					contentPane1.remove(appointmentForm);
+					try {
 					String forenameInput = forename.getText();
 					String surnameInput = surname.getText();
 					Date dateInput = Date.valueOf(date.getText());
@@ -276,6 +279,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					String typeInput = (String) type.getSelectedItem();
 					
 					int patient = 1;
+					
 					
 					
 					
@@ -293,10 +297,17 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					}
+					
 					contentPane1.revalidate();
 					contentPane1.repaint();
-				}
+					}
+				
+				}catch(IllegalArgumentException ec) {
+					JOptionPane.showMessageDialog(contentPane1, "Not All Fields Completed!");
+					contentPane1.add(appointmentForm);
+					contentPane1.revalidate();
+					contentPane1.repaint();
+				}}
 			});
 			buttons.add(bookApp);
 			
