@@ -99,23 +99,22 @@ public class Pricing extends JFrame {
 			
 	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	setBounds(150, 150, 1000, 450);
-			
-	Container contentPane = getContentPane();
-		
+
 	}
 	
 
 		
-	public static int calculateTotalPrice(int patient) throws Exception {
+	public static float calculateTotalPrice(int patient) throws Exception {
 		
 		List<String> appointments = SqlCreation.getPatientAppointments(patient);
 		
 		int totalApps = appointments.size();
-		int totalCost = 0;
+		float totalCost = 0;
 		
-		for (int i=0;i<(totalApps/9);i++){
-			System.out.println(appointments.get(3));
-			totalCost += Integer.getInteger(appointments.get(3));
+		for (int i=0;i<(totalApps/11);i++){
+			System.out.println(appointments.get((i*11)+4));
+			if (Integer.valueOf(appointments.get((i*11)+10))==0)
+				totalCost += Float.valueOf(appointments.get((i*11)+4));
 		}
 		
 		

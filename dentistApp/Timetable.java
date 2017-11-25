@@ -212,9 +212,9 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 			JPanel appointmentForm = new JPanel();
 			
 			JComboBox<String> type = new JComboBox<String>();
-			type.addItem("  Check Up");
-			type.addItem("  Hygiene");
-			type.addItem("  Repair");
+			type.addItem("Check Up");
+			type.addItem("Hygiene");
+			type.addItem("Repair");
 			
 			appointmentForm.add(new JLabel("              Appointment Type:", JLabel.LEFT));
 			appointmentForm.add(type);
@@ -277,20 +277,17 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					
 					int patient = 1;
 					
-					try {
-						patient = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);
-					} catch (Exception e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
+					
 					
 					try {
-						SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput);
-					} catch (Exception e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
-					try {
+						patient = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);
+						int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
+						if (freeLeft==0)
+							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, false);
+						else  {
+							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, true);
+							SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
+						}
 						createTimetable(contentPane1, currentDate, user);
 						addAppForm(contentPane1, currentDate, user);
 					} catch (Exception e1) {
@@ -359,7 +356,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 							int patient = 1;
 							
 							try {
-								SqlCreation.insertAppointment(patient, "HOLIDAY", dateInput, Time.valueOf("09:00:00"), 480, 0, partnerHolInput);
+								SqlCreation.insertAppointment(patient, "HOLIDAY", dateInput, Time.valueOf("09:00:00"), 480, 0, partnerHolInput, false);
 							} catch (Exception e2) {
 								// TODO Auto-generated catch block
 								e2.printStackTrace();
