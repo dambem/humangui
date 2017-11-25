@@ -244,10 +244,12 @@ public class MainScreen extends JFrame {
 				appointmentForm.add(new JLabel("Cost:", JLabel.RIGHT));
 				JTextField cost = new JTextField(25);
 				appointmentForm.add(cost);
-
-				appointmentForm.add(new JLabel("Partner:", JLabel.RIGHT));
-				JTextField postcode = new JTextField(25);
-				appointmentForm.add(postcode);
+				
+				JComboBox<String> partner = new JComboBox<String>();
+                partner.addItem("Hygienist");
+                partner.addItem("Dentist");
+                appointmentForm.add(new JLabel("Partner:", JLabel.RIGHT));
+                appointmentForm.add(partner);
 
 				JPanel buttons = new JPanel();
 				buttons.setLayout(new FlowLayout());
@@ -257,11 +259,23 @@ public class MainScreen extends JFrame {
 				bookApp.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						contentPane.remove(appointmentForm);
-						contentPane.add(datePanel, BorderLayout.CENTER);
-						contentPane.add(menuBar, BorderLayout.NORTH);
-						setContentPane(contentPane);
-						contentPane.repaint();
+					    if (forename.getText().trim().isEmpty() || surname.getText().trim().isEmpty()) {
+					        JOptionPane.showMessageDialog(null, "There were invalid entries, try again");
+					    }
+					    
+					    try {
+					        int n;
+					        n = Integer.parseInt(length.getText());
+					        n = Integer.parseInt(cost.getText());
+					        
+					        contentPane.remove(appointmentForm);
+	                        contentPane.add(datePanel, BorderLayout.CENTER);
+	                        contentPane.add(menuBar, BorderLayout.NORTH);
+	                        setContentPane(contentPane);
+	                        contentPane.repaint();
+					    } catch (NumberFormatException e1) {
+					        JOptionPane.showMessageDialog(null, "There were invalid entries, try again");
+					    }
 					}
 				});
 				appointmentForm.add(bookApp);
@@ -529,6 +543,7 @@ public class MainScreen extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 
 			contentPane.removeAll();
+			contentPane.add(toolBar_1, BorderLayout.EAST);
 
 			JPanel pricingInfo = new JPanel();
 			pricingInfo.setLayout(new GridLayout(0,2));
