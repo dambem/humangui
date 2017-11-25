@@ -19,6 +19,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
@@ -140,6 +141,14 @@ public class MainScreen extends JFrame {
 		datePanel.setBackground(Color.LIGHT_GRAY);
 		datePanel.setDoubleClickAction(true);
 		datePanel.setForeground(Color.LIGHT_GRAY);
+		datePanel.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent event) {
+				JOptionPane.showMessageDialog(frame, "Date Clicked:");
+				if (event.getClickCount() == 2) {
+					JOptionPane.showMessageDialog(frame, "Date Clicked:");
+				}
+			}
+		});
 
 	
 		
