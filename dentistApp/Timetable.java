@@ -3,6 +3,8 @@ package dentistApp;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+
+import org.jdatepicker.AbstractDateModel;
 import org.jdatepicker.JDatePanel;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
@@ -14,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 import org.jdatepicker.JDatePanel;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
+
 
 import javax.swing.JMenuBar;
 import java.awt.Panel;
@@ -63,11 +66,13 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -208,6 +213,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 	JPanel bookings = new JPanel();
 	bookings.setLayout(new FlowLayout());
 	JButton addApp = new JButton("Add New Appointment");
+	
 	addApp.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent e) {
@@ -224,8 +230,15 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 			appointmentForm.add(type);
 			
 			appointmentForm.add(new JLabel("Date:", JLabel.LEFT));
-			JTextField date = new JTextField(25);
+			UtilDateModel model = new UtilDateModel();
+			Properties p = new Properties();
+			model.setSelected(true);
+			p.put("text.today", "Today");
+			p.put("text.month", "Month");
+			p.put("text.year", "Year");
+			JDatePicker date = new JDatePicker(model);
 			appointmentForm.add(date);
+
 			
 			appointmentForm.add(new JLabel("Patient Forename:", JLabel.LEFT));
 			JTextField forename = new JTextField(25);
@@ -271,7 +284,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					try {
 					String forenameInput = forename.getText();
 					String surnameInput = surname.getText();
-					Date dateInput = Date.valueOf(date.getText());
+					Date dateInput = Date.valueOf(date.getModel().getYear()+"-"+date.getModel().getMonth()+"-"+date.getModel().getDay());
 					String birthInput = birth.getText();
 					String phoneInput = phone.getText();
 					Time startInput = Time.valueOf(start.getText());
@@ -345,9 +358,14 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					contentPane1.removeAll();
 					
 					JPanel holidayForm = new JPanel();
-					
+					UtilDateModel model = new UtilDateModel();
+					Properties p = new Properties();
+					model.setSelected(true);
+					p.put("text.today", "Today");
+					p.put("text.month", "Month");
+					p.put("text.year", "Year");
 					holidayForm.add(new JLabel("Date:", JLabel.LEFT));
-					JTextField dateHol = new JTextField(25);
+					JDatePicker dateHol = new JDatePicker(model);
 					holidayForm.add(dateHol);
 					
 //					holidayForm.add(new JLabel("Partner:", JLabel.LEFT));
@@ -358,7 +376,6 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					partnerHol.addItem("Hygenist");
 					partnerHol.addItem("Dentist");
 					holidayForm.add(partnerHol);
-				
 					JPanel buttons2 = new JPanel();
 					buttons2.setLayout(new FlowLayout());	
 					
@@ -367,10 +384,10 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							contentPane1.remove(holidayForm);
-							
-							Date dateInput = Date.valueOf(dateHol.getText());
+							Date dateInput = Date.valueOf(dateHol.getModel().getYear()+"-"+dateHol.getModel().getMonth()+"-"+dateHol.getModel().getDay());
+							System.out.println(dateInput);
 							String partnerHolInput = (String)partnerHol.getSelectedItem();
-					
+							
 							int patient = 1;
 							
 							try {
