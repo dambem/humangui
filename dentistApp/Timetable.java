@@ -3,7 +3,9 @@ package dentistApp;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-
+import org.jdatepicker.JDatePanel;
+import org.jdatepicker.JDatePicker;
+import org.jdatepicker.UtilDateModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -348,8 +350,13 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					JTextField dateHol = new JTextField(25);
 					holidayForm.add(dateHol);
 					
-					holidayForm.add(new JLabel("Partner:", JLabel.LEFT));
-					JTextField partnerHol = new JTextField(25);
+//					holidayForm.add(new JLabel("Partner:", JLabel.LEFT));
+//					JTextField partnerHol = new JTextField(25);
+//					holidayForm.add(partnerHol);
+					JComboBox<String> partnerHol = new JComboBox<String>();
+					partnerHol.addItem("Secretary");
+					partnerHol.addItem("Hygenist");
+					partnerHol.addItem("Dentist");
 					holidayForm.add(partnerHol);
 				
 					JPanel buttons2 = new JPanel();
@@ -362,7 +369,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 							contentPane1.remove(holidayForm);
 							
 							Date dateInput = Date.valueOf(dateHol.getText());
-							String partnerHolInput = partnerHol.getText();
+							String partnerHolInput = (String)partnerHol.getSelectedItem();
 					
 							int patient = 1;
 							
