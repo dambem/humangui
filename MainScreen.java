@@ -256,8 +256,9 @@ public class MainScreen extends JFrame {
 
 		JLabel lblNewLabel_1 = new JLabel("Date Chosen:");
 		toolBar_1.add(lblNewLabel_1);
-
-		JLabel lblNewLabel_2 = new JLabel("12/11/18");
+		LocalDate localDate4 = LocalDate.now();
+		String localDateStr4 = localDate4.toString();
+		JLabel lblNewLabel_2 = new JLabel(localDateStr4);
 		toolBar_1.add(lblNewLabel_2);
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -655,7 +656,7 @@ public class MainScreen extends JFrame {
 			JPanel pricingInfo = new JPanel();
 			pricingInfo.setLayout(new GridLayout(0,2));
 
-			pricingInfo.add(new JLabel("Forname:", JLabel.RIGHT));
+			pricingInfo.add(new JLabel("Forename:", JLabel.RIGHT));
 			JTextField forename = new JTextField(25);
 			pricingInfo.add(forename);
 
@@ -928,7 +929,7 @@ public class MainScreen extends JFrame {
 	JLabel lblNewLabel_3 = new JLabel("Date Chosen:");
 	toolBar_2.add(lblNewLabel_3);
 
-	JLabel lblNewLabel_4 = new JLabel("12/11/18");
+	JLabel lblNewLabel_4 = new JLabel(localDateStr);
 	toolBar_2.add(lblNewLabel_4);
 	lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
 
