@@ -287,20 +287,31 @@ public class MainScreen extends JFrame {
     						String typeInput = (String) type.getSelectedItem();
     						
     						int patient = 1;
-    						
-    						try {
-                                patient = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);
-                                int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
-                                if (freeLeft==0)
-                                    SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, false);
-                                else  {
-                                    SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, true);
-                                    SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
-                                }
-                            } catch (Exception e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
+    						patient = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);
+    						if (patient == 1){
+    							JOptionPane.showMessageDialog(frame, "Invalid user, please register first");
+    						}
+    						else if( SqlCreation.checkOverlap(dateInput.toString(), partnerInput, startInput, lengthInput, patient) ) {
+    							JOptionPane.showMessageDialog(contentPane, "Overlap of appointments!");
+    							contentPane.add(appointmentForm);
+    							contentPane.revalidate();
+    							contentPane.repaint();
+    							
+    						}
+    						else {
+	    						try {            
+	                                int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
+	                                if (freeLeft==0)
+	                                    SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, false);
+	                                else  {
+	                                    SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, true);
+	                                    SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
+	                                }
+	                            } catch (Exception e1) {
+	                                // TODO Auto-generated catch block
+	                                e1.printStackTrace();
+	                            }
+    						}
 						} catch (Exception e1) {
 						    JOptionPane.showMessageDialog(frame, "Invalid entries, try Add New again");
 						}
@@ -313,7 +324,7 @@ public class MainScreen extends JFrame {
 						contentPane.repaint();
 					}
 				});
-				buttons.add(bookApp);
+				appointmentForm.add(bookApp);
 				
 				JButton calReturn = new JButton("Return to Calendar");
 				calReturn.addMouseListener(new MouseAdapter() {
@@ -328,8 +339,7 @@ public class MainScreen extends JFrame {
 					}
 				});
 				
-				buttons.add(calReturn);
-				appointmentForm.add(buttons);
+				appointmentForm.add(calReturn);
 				contentPane.add(appointmentForm);
 				contentPane.revalidate();
 				contentPane.repaint();

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 public class SqlCreation {
 
 	public static void main(String[] args) throws Exception {
@@ -109,10 +110,10 @@ public static List<String> getAppsOnDate(Date date, String user) throws Exceptio
 			System.out.println(date);
 			PreparedStatement getAppointments;
 			if(user.equals("Secretary")){
-				getAppointments = conn.prepareStatement("SELECT appointment_type, start_time, length_mins, cost, partner, title, forename, surname, contact_number FROM appointments INNER JOIN patients ON appointments.patient_id = patients.patient_id WHERE appointments.date = '"+date+"';");
+				getAppointments = conn.prepareStatement("SELECT appointment_type, start_time, length_mins, cost, partner, title, forename, surname, contact_number, birth FROM appointments INNER JOIN patients ON appointments.patient_id = patients.patient_id WHERE appointments.date = '"+date+"';");
 			}
 			else {
-				getAppointments = conn.prepareStatement("SELECT appointment_type, start_time, length_mins, cost, partner, title, forename, surname, contact_number FROM appointments INNER JOIN patients ON appointments.patient_id = patients.patient_id WHERE appointments.date = '"+date+"' AND appointments.partner = '"+user+"';");
+				getAppointments = conn.prepareStatement("SELECT appointment_type, start_time, length_mins, cost, partner, title, forename, surname, contact_number, birth  FROM appointments INNER JOIN patients ON appointments.patient_id = patients.patient_id WHERE appointments.date = '"+date+"' AND appointments.partner = '"+user+"';");
 			}
 			
 			ResultSet apps = getAppointments.executeQuery();
@@ -131,6 +132,7 @@ public static List<String> getAppsOnDate(Date date, String user) throws Exceptio
 				appointments.add(apps.getString(7));
 				appointments.add(apps.getString(8));
 				appointments.add(apps.getString(9));
+				appointments.add(apps.getString(10));
 			}
 			System.out.println(appointments);
 			
@@ -146,6 +148,71 @@ public static List<String> getAppsOnDate(Date date, String user) throws Exceptio
 		
 	}
 	
+public static boolean checkOverlap(String date, String partner, Time time, int length, int patient) throws Exception {
+	
+	System.out.print("LOOKING FOR OVERLAP");
+	
+	Date dateV = Date.valueOf(date);
+	List<String> appointments = getAppsOnDate(dateV, "Secretary");
+	if(appointments.size()==0){
+		System.out.print("NO OVERLAP");
+		return false;
+	}
+	
+	System.out.print(appointments.size());
+	int size = appointments.size()/10;
+	
+	String startTime = time.toString();
+	String[] requested = (startTime).split(":");
+	float requestedStart = Float.valueOf(requested[0]);
+	requestedStart += (Float.valueOf(requested[1])/60);
+	String[] requestedEndTime = (Timetable.getEnd(startTime, String.valueOf(length))).split(":");
+	float requestedEnd = Float.valueOf(requestedEndTime[0]);
+	requestedEnd += (Float.valueOf(requestedEndTime[1])/60);
+	
+	for(int i=0; i < size; i++){
+		int id = getPatientId(appointments.get((i*10)+6), appointments.get((i*10)+7), appointments.get((i*10)+9), appointments.get((i*10)+8));
+		String[] split = (appointments.get((i*10)+1)).split(":");
+		float start = Float.valueOf(split[0]);
+		start += (Float.valueOf(split[1])/60);
+		String[] splitEnd = (Timetable.getEnd(appointments.get((i*10)+1), appointments.get((i*10)+2) )).split(":");
+		float end = Float.valueOf(splitEnd[0]);
+		end += (Float.valueOf(splitEnd[1])/60);
+
+		if(patient==id || partner.equals(appointments.get((i*10)+4))){
+			System.out.println("CHECKING OVERLAP");
+			System.out.println(requestedStart);
+			System.out.println(start);
+			System.out.println(Math.max(requestedStart, start));
+			System.out.println(requestedEnd);
+			System.out.println(end);
+			System.out.println(Math.min(end, requestedEnd));
+			System.out.println((Math.max(requestedStart, start) <  Math.min(end, requestedEnd)));
+			boolean overlap = (Math.max(requestedStart, start) <  Math.min(end, requestedEnd));
+			if(overlap)
+				return overlap;
+		}
+		
+		
+					
+		
+		
+		
+	}
+	
+	List<String> appointments2 = getAppsOnDate(dateV, partner);
+	if(appointments2.size()==0){
+		System.out.print("NO OVERLAP");
+		return false;
+	}
+	
+	return false;
+	
+	
+	
+	
+	
+}
 	
 	
 	

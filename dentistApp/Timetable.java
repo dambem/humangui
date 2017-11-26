@@ -284,7 +284,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					try {
 					String forenameInput = forename.getText();
 					String surnameInput = surname.getText();
-					Date dateInput = Date.valueOf(date.getModel().getYear()+"-"+date.getModel().getMonth()+"-"+date.getModel().getDay());
+					Date dateInput = Date.valueOf(date.getModel().getYear()+"-"+(date.getModel().getMonth()+1)+"-"+date.getModel().getDay());
 					String birthInput = birth.getText();
 					String phoneInput = phone.getText();
 					Time startInput = Time.valueOf(start.getText());
@@ -301,14 +301,22 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					try {
 						patient = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);
 						int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
-						if (freeLeft==0)
-							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, false);
-						else  {
-							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, true);
-							SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
+						if( SqlCreation.checkOverlap(dateInput.toString(), partnerInput, startInput, lengthInput, patient) ) {
+							JOptionPane.showMessageDialog(contentPane1, "Overlap of appointments!");
+							contentPane1.add(appointmentForm);
+							contentPane1.revalidate();
+							contentPane1.repaint();
 						}
-						createTimetable(contentPane1, currentDate, user);
-						addAppForm(contentPane1, currentDate, user);
+						else{
+							if (freeLeft==0)
+								SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, false);
+							else  {
+								SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, true);
+								SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
+							}
+							createTimetable(contentPane1, currentDate, user);
+							addAppForm(contentPane1, currentDate, user);
+						}
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -384,7 +392,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							contentPane1.remove(holidayForm);
-							Date dateInput = Date.valueOf(dateHol.getModel().getYear()+"-"+dateHol.getModel().getMonth()+"-"+dateHol.getModel().getDay());
+							Date dateInput = Date.valueOf(dateHol.getModel().getYear()+"-"+(dateHol.getModel().getMonth()+1)+"-"+dateHol.getModel().getDay());
 							System.out.println(dateInput);
 							String partnerHolInput = (String)partnerHol.getSelectedItem();
 							
@@ -501,10 +509,10 @@ static String getDayOfMonthSuffix(Date date) {
 		try{
 			JButton time;
 			int totalDay = dayApps.size();
-			System.out.println(totalDay/9);
+			System.out.println(totalDay/10);
 			System.out.println("Length of list");
-			for (int i=0;i<(totalDay/9);i++){
-				String[] split = dayApps.get((9*i)+1).split(":");
+			for (int i=0;i<(totalDay/10);i++){
+				String[] split = dayApps.get((10*i)+1).split(":");
 				int appHour = Integer.valueOf(split[0]);
 				int appMin = Integer.valueOf(split[1]);
 				appMin = appMin / 15;
@@ -517,13 +525,13 @@ static String getDayOfMonthSuffix(Date date) {
 				appointmentInfo.setBorder(BorderFactory.createCompoundBorder(outside, paddingBorder));
 				
 
-				appointmentInfo.add(new JLabel("Patient Name: " + dayApps.get((9*i)+6) + " " + dayApps.get((9*i)+7)));
+				appointmentInfo.add(new JLabel("Patient Name: " + dayApps.get((10*i)+6) + " " + dayApps.get((10*i)+7)));
 				
-				appointmentInfo.add(new JLabel("Patient Contact No: " +  dayApps.get((9*i)+8)) );
-				appointmentInfo.add(new JLabel("Appointment Type: " +  (dayApps.get(9*i) ) ) );
-				appointmentInfo.add(new JLabel("Cost: " +  (dayApps.get((9*i)+3) ) ) );
-				appointmentInfo.add(new JLabel("Partner Performing Procedure: " +  (dayApps.get((9*i)+4) )) );
-				appointmentInfo.add(new JLabel("Time of Appointment: " +  split[0] + ":" +split[1] + "-" + getEnd(dayApps.get((9*i)+1), dayApps.get((9*i)+2)) ) );
+				appointmentInfo.add(new JLabel("Patient Contact No: " +  dayApps.get((10*i)+8)) );
+				appointmentInfo.add(new JLabel("Appointment Type: " +  (dayApps.get(10*i) ) ) );
+				appointmentInfo.add(new JLabel("Cost: " +  (dayApps.get((10*i)+3) ) ) );
+				appointmentInfo.add(new JLabel("Partner Performing Procedure: " +  (dayApps.get((10*i)+4) )) );
+				appointmentInfo.add(new JLabel("Time of Appointment: " +  split[0] + ":" +split[1] + "-" + getEnd(dayApps.get((10*i)+1), dayApps.get((10*i)+2)) ) );
 				JButton returnButton = new JButton("RETURN TO CALENDAR");
 				returnButton.addMouseListener(new MouseAdapter() {
 					@Override
@@ -543,8 +551,8 @@ static String getDayOfMonthSuffix(Date date) {
 				});
 				
 				JButton deleteButton = new JButton("DELETE APPOINTMENT");
-				String timeApp = dayApps.get((9*i)+1);
-				String partnerApp = dayApps.get((9*i)+4);
+				String timeApp = dayApps.get((10*i)+1);
+				String partnerApp = dayApps.get((10*i)+4);
 				deleteButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -576,7 +584,7 @@ static String getDayOfMonthSuffix(Date date) {
 				buttons.add(deleteButton);
 				appointmentInfo.add(buttons);
 				
-				time = new JButton(dayApps.get((9*i)+5) + " " + dayApps.get((9*i)+7).charAt(0) + ": "+split[0] + ":" +split[1] + "-" + getEnd(dayApps.get((9*i)+1), dayApps.get((9*i)+2)) );
+				time = new JButton(dayApps.get((10*i)+5) + " " + dayApps.get((10*i)+7).charAt(0) + ": "+split[0] + ":" +split[1] + "-" + getEnd(dayApps.get((10*i)+1), dayApps.get((10*i)+2)) );
 				time.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -590,9 +598,9 @@ static String getDayOfMonthSuffix(Date date) {
 				
 				c.fill = GridBagConstraints.NONE;
 				c.weightx = 0.5;
-				c.gridheight = (int) ((Float.valueOf(dayApps.get((9*i)+2)))/15);
-				System.out.println("HEIGHT IS - " + (Float.valueOf(dayApps.get((9*i)+2)))/15);
-				c.ipady = (Integer.valueOf(dayApps.get((9*i)+2))/3);
+				c.gridheight = (int) ((Float.valueOf(dayApps.get((10*i)+2)))/12);
+				System.out.println("HEIGHT IS - " + (Float.valueOf(dayApps.get((10*i)+2)))/15);
+				c.ipady = (Integer.valueOf(dayApps.get((10*i)+2))/3);
 				c.ipadx = 0;
 				c.gridx = day;
 				c.gridy = (appHour*4) + appMin;
