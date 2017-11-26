@@ -55,6 +55,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -283,7 +284,13 @@ public class MainScreen extends JFrame {
 				appointmentForm.add(type);
 				
 				appointmentForm.add(new JLabel("Date:", JLabel.RIGHT));
-				JTextField date = new JTextField(25);
+				UtilDateModel model = new UtilDateModel();
+				Properties p = new Properties();
+				model.setSelected(true);
+				p.put("text.today", "Today");
+				p.put("text.month", "Month");
+				p.put("text.year", "Year");
+				JDatePicker date = new JDatePicker(model);
 				appointmentForm.add(date);
 				
 				appointmentForm.add(new JLabel("Patient Forename:", JLabel.RIGHT));
@@ -333,7 +340,7 @@ public class MainScreen extends JFrame {
     						
     						String forenameInput = forename.getText();
     						String surnameInput = surname.getText();
-    						Date dateInput = Date.valueOf(date.getText());
+    						Date dateInput = Date.valueOf(date.getModel().getYear()+"-"+(date.getModel().getMonth()+1)+"-"+date.getModel().getDay());
     						String birthInput = birth.getText();
     						String phoneInput = phone.getText();
     						Time startInput = Time.valueOf(start.getText());
@@ -462,7 +469,7 @@ public class MainScreen extends JFrame {
 				registerForm.add(title);
 				title.setDocument(new JTextFieldLimit(4));
 
-				registerForm.add(new JLabel(" Forname:", JLabel.RIGHT));
+				registerForm.add(new JLabel(" Forename:", JLabel.RIGHT));
 				JTextField forename = new JTextField(25);
 				registerForm.add(forename);
 
