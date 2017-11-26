@@ -1152,8 +1152,10 @@ public class MainScreen extends JFrame {
 	List<String> nextApp2 = SqlCreation.getNextApp(partner2, localDateStr2,  sdf2.format(cal2.getTime()), 0 );
 
 	JButton nextAppBtn2 = new JButton("No More Appointments Today ");
-
-
+    LocalDate currentDate = LocalDate.now();  
+	Date today = java.sql.Date.valueOf(currentDate);
+	List<String> day1apps = SqlCreation.getAppsOnDate(today, "2");
+	System.out.println(day1apps);
 	if( nextApp2.size() != 0 ) {
 		nextAppBtn2 = new JButton("Next App: " + nextApp2.get(1));
 		nextAppBtn2.addMouseListener(new MouseAdapter() {
