@@ -264,10 +264,6 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 			JTextField length = new JTextField(32);
 			appointmentForm.add(length);
 			
-			appointmentForm.add(new JLabel("Cost:", JLabel.LEFT));
-			JTextField cost = new JTextField(25);
-			appointmentForm.add(cost);
-			
 			appointmentForm.add(new JLabel("Partner:", JLabel.LEFT));
 			JTextField partner = new JTextField(25);
 			appointmentForm.add(partner);
@@ -289,7 +285,6 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					String phoneInput = phone.getText();
 					Time startInput = Time.valueOf(start.getText());
 					int lengthInput = Integer.valueOf(length.getText());
-					float costInput = Float.valueOf(cost.getText());
 					String partnerInput = partner.getText();
 					String typeInput = (String) type.getSelectedItem();
 					
@@ -313,7 +308,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 							contentPane1.repaint();
 						}
 						else{
-							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput);
+							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, 0, partnerInput);
 							createTimetable(contentPane1, currentDate, user);
 							addAppForm(contentPane1, currentDate, user);
 						}

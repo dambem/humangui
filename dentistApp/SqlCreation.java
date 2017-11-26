@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +17,6 @@ import java.util.List;
 public class SqlCreation {
 
 	public static void main(String[] args) throws Exception {
-		
-		getConnection();
 		Connection conn = getConnection();
 		createTable();
 		deleteData();
@@ -54,20 +53,20 @@ public class SqlCreation {
 		registerPatient("DN370RX", "Church Lane", "Lincoln", "Grimsby", 1, 2, "Mr", "Harry", "Williams", dateOB, "7484659713");
 		registerPatient("DN370QW", "Main Road", "Lincoln", "Grimsby", 4, 2, "Mr", "Harold", "Williams", dateOB, "7484659713");
 		registerPatient("DN370RX", "Church Lane", "Lincoln", "Grimsby", 1, 0, "Mrs", "Janice", "Williams", dateOB, "7484659713");
-		insertAppointment(2, "Hygiene", dateOfApp, appTime, 60, 45.00, "Hygenist");
-		insertAppointment(4, "Repair", dateOfApp, appTime2, 45, 15.00, "Hygenist");
-		insertAppointment(3, "Check Up", dateOfApp, appTime3, 75, 20.00, "Hygenist");
-		insertAppointment(2, "Check Up", dateOfApp2, appTime4, 75, 20.00, "Dentist");
-		insertAppointment(3, "Hygiene", dateOfApp3, appTime7, 30, 45.00, "Dentist");
-		insertAppointment(4, "Hygiene", dateOfApp4, appTime2, 60, 45.00, "Hygenist");
-		insertAppointment(3, "Hygiene", dateOfApp5, appTime6, 60, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp6, appTime, 30, 45.00, "Hygenist");
-		insertAppointment(4, "Hygiene", dateOfApp7, appTime5, 45, 45.00, "Dentist");
-		insertAppointment(2, "Hygiene", dateOfApp4, appTime5, 60, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime4, 20, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime3, 60, 35.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime2, 60, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp5, appTime7, 60, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp, appTime, 0, 45.00, "Hygenist");
+		insertAppointment(4, "Repair", dateOfApp, appTime2, 0, 15.00, "Hygenist");
+		insertAppointment(3, "Check Up", dateOfApp, appTime3, 0, 20.00, "Hygenist");
+		insertAppointment(2, "Check Up", dateOfApp2, appTime4, 0, 20.00, "Dentist");
+		insertAppointment(3, "Hygiene", dateOfApp3, appTime7, 0, 45.00, "Dentist");
+		insertAppointment(4, "Hygiene", dateOfApp4, appTime2, 0, 45.00, "Hygenist");
+		insertAppointment(3, "Hygiene", dateOfApp5, appTime6, 0, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp6, appTime, 0, 45.00, "Hygenist");
+		insertAppointment(4, "Hygiene", dateOfApp7, appTime5, 0, 45.00, "Dentist");
+		insertAppointment(2, "Hygiene", dateOfApp4, appTime5, 0, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime4, 0, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime3, 0, 35.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime2, 0, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp5, appTime7, 0, 45.00, "Hygenist");
 		getAppsOnDate(Date.valueOf("2017-11-21"), "Hygenist");
 		
 		}
@@ -93,7 +92,7 @@ public class SqlCreation {
 			createAppointments.executeUpdate();
 			System.out.println("success appointments");
 			
-			PreparedStatement createFreeTreatments = conn.prepareStatement("CREATE TABLE IF NOT EXISTS freeTreatments ( free_id INT NOT NULL UNIQUE AUTO_INCREMENT, patient_id INT NOT NULL, plan_id INT NOT NULL, check_ups TINYINT(1), hygiene TINYINT(1), repairs TINYINT(1), PRIMARY KEY ( free_id ), FOREIGN KEY (patient_id) REFERENCES patients(patient_id), FOREIGN KEY (plan_id) REFERENCES plans(plan_id) );");
+			PreparedStatement createFreeTreatments = conn.prepareStatement("CREATE TABLE IF NOT EXISTS freeTreatments ( free_id INT NOT NULL UNIQUE AUTO_INCREMENT, patient_id INT NOT NULL, plan_id INT NOT NULL, check_ups TINYINT(1), hygiene TINYINT(1), repairs TINYINT(1), expiry DATE , PRIMARY KEY ( free_id ), FOREIGN KEY (patient_id) REFERENCES patients(patient_id), FOREIGN KEY (plan_id) REFERENCES plans(plan_id) );");
 			createFreeTreatments.executeUpdate();
 			System.out.println("success free treatments");
 			
@@ -431,6 +430,11 @@ public static int getAppId(String start, String date, String partner) throws Exc
 			}
 			System.out.println("GOT PATIENT ID, IT IS - " + id);
 			
+			LocalDate localDate = LocalDate.now();
+			LocalDate nextYear = localDate.plusYears(1);
+			System.out.print(nextYear);
+			String localDateStr = nextYear.toString();
+			
 			int checkUps, hygiene, repairs;
 			
 			if (plan == 0){ checkUps = 0; hygiene = 0; repairs = 0; }
@@ -439,7 +443,7 @@ public static int getAppId(String start, String date, String partner) throws Exc
 			else if (plan == 3){ checkUps = 2; hygiene = 4; repairs = 0; }
 			else { checkUps = 2; hygiene = 2; repairs = 2; }
 			
-			PreparedStatement getFree = conn.prepareStatement("INSERT IGNORE INTO freeTreatments ( patient_id, plan_id, check_ups, hygiene, repairs) VALUES (" + patient_id.getString(1) + ", " + plan + ", '" + checkUps + "', '" + hygiene + "', '" + repairs + "');");
+			PreparedStatement getFree = conn.prepareStatement("INSERT IGNORE INTO freeTreatments ( patient_id, plan_id, check_ups, hygiene, repairs, expiry) VALUES (" + patient_id.getString(1) + ", " + plan + ", '" + checkUps + "', '" + hygiene + "', '" + repairs + "', '"+localDateStr+"');");
 			getFree.executeUpdate();
 			
 			
@@ -906,6 +910,33 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		
 	}
 	
+
+
+	public static void updatePlan(int plan, int patient) throws Exception {
+		// TODO Auto-generated method stub
+		Connection conn = getConnection();
+		PreparedStatement updateFree = conn.prepareStatement("UPDATE patients SET plan_id = '"+plan+"' WHERE patient_id = '"+patient+"';");
+		updateFree.executeUpdate();
+		
+		LocalDate localDate = LocalDate.now();
+		LocalDate nextYear = localDate.plusYears(1);
+		String localDateStr = nextYear.toString();
+		
+		int checkUps=0, hygiene=0, repairs=0;
+		
+		if (plan == 0){ checkUps = 0; hygiene = 0; repairs = 0; }
+		else if (plan == 1){ checkUps = 2; hygiene = 2; repairs = 6; }
+		else if (plan == 2){ checkUps = 2; hygiene = 2; repairs = 0; }
+		else if (plan == 3){ checkUps = 2; hygiene = 4; repairs = 0; }
+		else { checkUps = 2; hygiene = 2; repairs = 2; }
+		
+		
+		PreparedStatement insertFree = conn.prepareStatement("UPDATE freeTreatments SET plan_id='" + plan + "', check_ups='" + checkUps + "', hygiene='" + hygiene + "', repairs='" + repairs + "', expiry='"+localDateStr+"' WHERE patient_id='"+patient+"';");
+		insertFree.executeUpdate();
+		
+	}
+
+	
 	
 	public static Connection getConnection() throws Exception {
 		try{
@@ -929,10 +960,7 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		
 		
 		
-	}
-
-
-	
+	}	
 	
 	
 	

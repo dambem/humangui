@@ -318,10 +318,6 @@ public class MainScreen extends JFrame {
 				JTextField length = new JTextField(32);
 				appointmentForm.add(length);
 				
-				appointmentForm.add(new JLabel("Cost:", JLabel.RIGHT));
-				JTextField cost = new JTextField(25);
-				appointmentForm.add(cost);
-				
 				
 				JComboBox<String> partner = new JComboBox<String>();
                 partner.addItem("Dentist");
@@ -346,7 +342,6 @@ public class MainScreen extends JFrame {
     						String phoneInput = phone.getText();
     						Time startInput = Time.valueOf(start.getText());
     						int lengthInput = Integer.valueOf(length.getText());
-    						float costInput = Float.valueOf(cost.getText());
     						String partnerInput = (String) partner.getSelectedItem();
     						String typeInput = (String) type.getSelectedItem();
     						
@@ -363,7 +358,7 @@ public class MainScreen extends JFrame {
     							
     						}
     						else {
-    							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput);
+    							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, 0, partnerInput);
     						}
 						} catch (Exception e1) {
 						    JOptionPane.showMessageDialog(frame, "Invalid entries, try Add New again");
@@ -628,15 +623,6 @@ public class MainScreen extends JFrame {
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		JButton reciept = new JButton("Get reciept for appointment");
 		reciept.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -755,6 +741,130 @@ public class MainScreen extends JFrame {
 		});
 		
 		toolBar_1.add(reciept);
+		
+		
+		
+		
+		
+		
+		
+		
+		JButton plans = new JButton("Organise patients plans");
+		plans.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+
+				contentPane.removeAll();
+
+				JPanel planInfo = new JPanel();
+				planInfo.setLayout(new GridLayout(0,2));
+
+				planInfo.add(new JLabel("Forename:", JLabel.RIGHT));
+				JTextField forename = new JTextField(25);
+				planInfo.add(forename);
+
+				planInfo.add(new JLabel("Surname:", JLabel.RIGHT));
+				JTextField surname = new JTextField(25);
+				planInfo.add(surname);
+
+				planInfo.add(new JLabel("Birth date (form yyyy-mm-dd):", JLabel.RIGHT));
+				JTextField birth = new JTextField(25);
+				planInfo.add(birth);
+
+				planInfo.add(new JLabel("Phone No:", JLabel.RIGHT));
+				JTextField phone = new JTextField(25);
+				planInfo.add(phone);
+				
+				JComboBox<String> plan = new JComboBox<String>();
+				plan.addItem("No Dental Plan");
+				plan.addItem("NHS Free Plan");
+				plan.addItem("Maintenance Plan");
+				plan.addItem("Oral Health Plan");
+				plan.addItem("Dental Repair Plan");
+
+				planInfo.add(new JLabel("Dental Plan:", JLabel.RIGHT));
+				planInfo.add(plan);
+
+				JButton planSub = new JButton("Update patients plan");
+				planSub.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						String forenameInput = forename.getText();
+						String surnameInput = surname.getText();
+						String birthInput = birth.getText();
+						String phoneInput = phone.getText();
+						int planInput = plan.getSelectedIndex();
+
+						int id = 0;
+						try {
+							id = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);						
+							SqlCreation.updatePlan(planInput,id);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						contentPane.removeAll();
+						contentPane.add(toolBar_1, BorderLayout.EAST);
+						contentPane.add(datePanel, BorderLayout.CENTER);
+						contentPane.add(menuBar, BorderLayout.NORTH);
+						contentPane.revalidate();
+						contentPane.repaint();
+					}
+				});
+				
+				
+				
+				planInfo.add(planSub);
+				JButton planUnsub = new JButton("Remove Plan");
+				planUnsub.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						String forenameInput = forename.getText();
+						String surnameInput = surname.getText();
+						String birthInput = birth.getText();
+						String phoneInput = phone.getText();
+						int planInput = 0;
+
+						int id = 0;
+						try {
+							id = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);						
+							SqlCreation.updatePlan(planInput,id);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						contentPane.removeAll();
+						contentPane.add(toolBar_1, BorderLayout.EAST);
+						contentPane.add(datePanel, BorderLayout.CENTER);
+						contentPane.add(menuBar, BorderLayout.NORTH);
+						contentPane.revalidate();
+						contentPane.repaint();
+					}
+				});
+				planInfo.add(planUnsub);
+				
+				JButton returnButton = new JButton("RETURN TO CALENDAR");
+				returnButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						contentPane.removeAll();
+
+						contentPane.add(toolBar_1, BorderLayout.EAST);
+						contentPane.add(datePanel, BorderLayout.CENTER);
+						contentPane.add(menuBar, BorderLayout.NORTH);
+						contentPane.setVisible(true);
+						contentPane.revalidate();
+						contentPane.repaint();
+					}
+				});
+				planInfo.add(returnButton);
+				contentPane.add(planInfo);
+				contentPane.revalidate();
+				contentPane.repaint();
+			}
+		});
+		
+		toolBar_1.add(plans);
 		/*
 		 *
 		 *
