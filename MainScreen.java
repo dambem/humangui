@@ -213,51 +213,56 @@ public class MainScreen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				contentPane.removeAll();
+				contentPane.add(toolBar_1, BorderLayout.EAST);
 				
 				JPanel appointmentForm = new JPanel();
+				appointmentForm.setLayout(new GridLayout(0,2));
 				
 				JComboBox<String> type = new JComboBox<String>();
 				type.addItem("Check Up");
 				type.addItem("Hygiene");
 				type.addItem("Repair");
 				
-				appointmentForm.add(new JLabel("              Appointment Type:", JLabel.LEFT));
+				appointmentForm.add(new JLabel("Appointment Type:", JLabel.RIGHT));
 				appointmentForm.add(type);
 				
-				appointmentForm.add(new JLabel("Date:", JLabel.LEFT));
+				appointmentForm.add(new JLabel("Date:", JLabel.RIGHT));
 				JTextField date = new JTextField(25);
 				appointmentForm.add(date);
 				
-				appointmentForm.add(new JLabel("Patient Forename:", JLabel.LEFT));
+				appointmentForm.add(new JLabel("Patient Forename:", JLabel.RIGHT));
 				JTextField forename = new JTextField(25);
 				appointmentForm.add(forename);
 				
-				appointmentForm.add(new JLabel("Patient Surname:", JLabel.LEFT));
+				appointmentForm.add(new JLabel("Patient Surname:", JLabel.RIGHT));
 				JTextField surname = new JTextField(25);
 				appointmentForm.add(surname);
 				
-				appointmentForm.add(new JLabel("Birth date (form yyyy-mm-dd):", JLabel.LEFT));
+				appointmentForm.add(new JLabel("Birth date (form yyyy-mm-dd):", JLabel.RIGHT));
 				JTextField birth = new JTextField(32);
 				appointmentForm.add(birth);
 				
-				appointmentForm.add(new JLabel("Phone No:", JLabel.LEFT));
+				appointmentForm.add(new JLabel("Phone No:", JLabel.RIGHT));
 				JTextField phone = new JTextField(25);
 				appointmentForm.add(phone);
 				
-				appointmentForm.add(new JLabel("Start Time (hh:mm:ss):", JLabel.LEFT));
+				appointmentForm.add(new JLabel("Start Time (hh:mm:ss):", JLabel.RIGHT));
 				JTextField start = new JTextField(25);
 				appointmentForm.add(start);
 				
-				appointmentForm.add(new JLabel("Length(mins):", JLabel.LEFT));
+				appointmentForm.add(new JLabel("Length(mins):", JLabel.RIGHT));
 				JTextField length = new JTextField(32);
 				appointmentForm.add(length);
 				
-				appointmentForm.add(new JLabel("Cost:", JLabel.LEFT));
+				appointmentForm.add(new JLabel("Cost:", JLabel.RIGHT));
 				JTextField cost = new JTextField(25);
 				appointmentForm.add(cost);
 				
-				appointmentForm.add(new JLabel("Partner:", JLabel.LEFT));
-				JTextField partner = new JTextField(25);
+				
+				JComboBox<String> partner = new JComboBox<String>();
+                partner.addItem("Dentist");
+                partner.addItem("Hygienist");
+				appointmentForm.add(new JLabel("Partner:", JLabel.RIGHT));
 				appointmentForm.add(partner);
 			
 				JPanel buttons = new JPanel();
@@ -267,36 +272,39 @@ public class MainScreen extends JFrame {
 				bookApp.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						contentPane.remove(appointmentForm);
-						
-						String forenameInput = forename.getText();
-						String surnameInput = surname.getText();
-						Date dateInput = Date.valueOf(date.getText());
-						String birthInput = birth.getText();
-						String phoneInput = phone.getText();
-						Time startInput = Time.valueOf(start.getText());
-						int lengthInput = Integer.valueOf(length.getText());
-						float costInput = Float.valueOf(cost.getText());
-						String partnerInput = partner.getText();
-						String typeInput = (String) type.getSelectedItem();
-						
-						int patient = 1;
-						
-						
-						
 						try {
-							patient = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);
-							int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
-							if (freeLeft==0)
-								SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, false);
-							else  {
-								SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, true);
-								SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
-							}
+    					    contentPane.remove(appointmentForm);
+    						
+    						String forenameInput = forename.getText();
+    						String surnameInput = surname.getText();
+    						Date dateInput = Date.valueOf(date.getText());
+    						String birthInput = birth.getText();
+    						String phoneInput = phone.getText();
+    						Time startInput = Time.valueOf(start.getText());
+    						int lengthInput = Integer.valueOf(length.getText());
+    						float costInput = Float.valueOf(cost.getText());
+    						String partnerInput = (String) partner.getSelectedItem();
+    						String typeInput = (String) type.getSelectedItem();
+    						
+    						int patient = 1;
+    						
+    						try {
+                                patient = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);
+                                int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
+                                if (freeLeft==0)
+                                    SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, false);
+                                else  {
+                                    SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, true);
+                                    SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
+                                }
+                            } catch (Exception e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            }
 						} catch (Exception e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+						    JOptionPane.showMessageDialog(frame, "Invalid entries, try Add New again");
 						}
+						
 						contentPane.remove(appointmentForm);
 						contentPane.add(datePanel, BorderLayout.CENTER);
 						contentPane.add(menuBar, BorderLayout.NORTH);
@@ -311,11 +319,12 @@ public class MainScreen extends JFrame {
 				calReturn.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						contentPane.remove(appointmentForm);
-						contentPane.add(datePanel, BorderLayout.CENTER);
-						contentPane.add(menuBar, BorderLayout.NORTH);
-						setContentPane(contentPane);
-						contentPane.repaint();
+					    contentPane.remove(appointmentForm);
+                        contentPane.add(datePanel, BorderLayout.CENTER);
+                        contentPane.add(menuBar, BorderLayout.NORTH);
+                        contentPane.add(toolBar_1, BorderLayout.EAST);
+                        contentPane.revalidate();
+                        contentPane.repaint();
 					}
 				});
 				
