@@ -510,10 +510,11 @@ public class MainScreen extends JFrame {
 
 						try {
 							SqlCreation.registerPatient(postcodeInput, streetInput, districtInput, cityInput, Integer.parseInt(houseInput), plan.getSelectedIndex(), titleInput, forenameInput, surnameInput, Date.valueOf(birthInput), phoneInput);
-						} catch (Exception e1) {
+						}
+						catch (Exception e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
+						} 
 						
 
 						contentPane.remove(registerForm);
@@ -521,7 +522,12 @@ public class MainScreen extends JFrame {
 						contentPane.add(menuBar, BorderLayout.NORTH);
 						setContentPane(contentPane);
 						contentPane.repaint();
-						}
+						}catch (NumberFormatException en){
+							JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+							contentPane.add(registerForm);
+							contentPane.revalidate();
+							contentPane.repaint();
+						} 
 						catch(IllegalArgumentException ec) {
 							JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
 							contentPane.add(registerForm);
