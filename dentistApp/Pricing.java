@@ -111,10 +111,8 @@ public class Pricing extends JFrame {
 		int totalApps = appointments.size();
 		float totalCost = 0;
 		
-		for (int i=0;i<(totalApps/11);i++){
-			System.out.println(appointments.get((i*11)+4));
-			if (Integer.valueOf(appointments.get((i*11)+10))==0)
-				totalCost += Float.valueOf(appointments.get((i*11)+4));
+		for (int i=0;i<(totalApps/10);i++){
+			totalCost += Float.valueOf(appointments.get((i*10)+4));
 		}
 		
 		

@@ -355,18 +355,7 @@ public class MainScreen extends JFrame {
     							
     						}
     						else {
-	    						try {            
-	                                int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
-	                                if (freeLeft==0)
-	                                    SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, false);
-	                                else  {
-	                                    SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, true);
-	                                    SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
-	                                }
-	                            } catch (Exception e1) {
-	                                // TODO Auto-generated catch block
-	                                e1.printStackTrace();
-	                            }
+    							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput);
     						}
 						} catch (Exception e1) {
 						    JOptionPane.showMessageDialog(frame, "Invalid entries, try Add New again");
@@ -626,6 +615,138 @@ public class MainScreen extends JFrame {
 
 		toolBar_1.add(nextAppBtn);
 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		JButton reciept = new JButton("Get reciept for appointment");
+		reciept.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+
+				contentPane.removeAll();
+
+				JPanel appointmentInfo = new JPanel();
+				appointmentInfo.setLayout(new GridLayout(7,1));
+				Border paddingBorder = BorderFactory.createEmptyBorder(15,15,15,15);
+				Border outside = BorderFactory.createBevelBorder(1);
+				appointmentInfo.setBorder(BorderFactory.createCompoundBorder(outside, paddingBorder));
+
+				appointmentInfo.add(new JLabel("Appointment date:", JLabel.RIGHT));
+				JTextField date = new JTextField(25);
+				appointmentInfo.add(date);
+				
+				appointmentInfo.add(new JLabel("Appointment time:", JLabel.RIGHT));
+				JTextField start = new JTextField(25);
+				appointmentInfo.add(start);
+				
+				appointmentInfo.add(new JLabel("Partner:", JLabel.RIGHT));
+				JTextField partner = new JTextField(25);
+				appointmentInfo.add(partner);
+
+				JButton pricePatient = new JButton("View Patient's Pricing");
+				pricePatient.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						String dateInput = date.getText();
+						String startInput = start.getText();
+						String partnerInput = partner.getText();
+						
+						contentPane.removeAll();
+				
+						int appID = 0;
+						try {
+							appID = SqlCreation.getAppId(startInput,dateInput,partnerInput);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						List<String> treatments = SqlCreation.getTreatments(appID);
+						
+						int totalCost = 0;
+						
+						JPanel pricingBreakdown = new JPanel();
+						pricingBreakdown.setLayout(new GridLayout(0,2));
+						
+						for (int i=0;i<(treatments.size()/4);i++){
+						
+							pricingBreakdown.add(new JLabel("Treatement Description: " +  treatments.get(i*4)));
+		
+							pricingBreakdown.add(new JLabel("Cost: " +  treatments.get((i*4)+1)));
+		
+							pricingBreakdown.add(new JLabel("Type: " +  treatments.get((i*4)+2)));
+		
+							if (Integer.valueOf(treatments.get((i*4)+3))==1)
+								pricingBreakdown.add(new JLabel("Pre-paid: Yes"));
+							else {
+								pricingBreakdown.add(new JLabel("Pre-paid: No"));
+								float current = Float.valueOf(treatments.get((i*4)+1));
+								
+								int currentI = (int) current;
+								totalCost += currentI;
+							}
+							
+							
+							
+						}
+						pricingBreakdown.add(new JLabel("Total Cost: " +  totalCost));
+						
+						JButton returnButton = new JButton("RETURN TO CALENDAR");
+						returnButton.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								contentPane.removeAll();
+		
+								contentPane.add(toolBar_1, BorderLayout.EAST);
+								contentPane.add(datePanel, BorderLayout.CENTER);
+								contentPane.add(menuBar, BorderLayout.NORTH);
+								contentPane.setVisible(true);
+								contentPane.revalidate();
+								contentPane.repaint();
+							}
+						});
+		
+		
+						pricingBreakdown.add(returnButton);
+						contentPane.add(pricingBreakdown);
+						contentPane.revalidate();
+						contentPane.repaint();
+					}
+				});
+				
+				appointmentInfo.add(pricePatient);
+				
+				JButton returnButton = new JButton("RETURN TO CALENDAR");
+				returnButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						contentPane.removeAll();
+
+						contentPane.add(toolBar_1, BorderLayout.EAST);
+						contentPane.add(datePanel, BorderLayout.CENTER);
+						contentPane.add(menuBar, BorderLayout.NORTH);
+						contentPane.setVisible(true);
+						contentPane.revalidate();
+						contentPane.repaint();
+					}
+				});
+				appointmentInfo.add(returnButton);
+				contentPane.add(appointmentInfo);
+				contentPane.revalidate();
+				contentPane.repaint();
+			}
+		});
+		
+		toolBar_1.add(reciept);
 		/*
 		 *
 		 *
@@ -686,16 +807,70 @@ public class MainScreen extends JFrame {
 
 						int totalApps = patientApps.size();
 						System.out.println(totalApps);
-						for (int i=0;i<(totalApps/11);i++){
-							costingInfo.add(new JLabel("Appointment Type: " +  patientApps.get(i*11) )  );
-							costingInfo.add(new JLabel("Date of Appointment: " +  patientApps.get( (i*11)+3 ) ));
-							costingInfo.add(new JLabel("Cost: " +  patientApps.get( (i*11)+4 ) ) );
-							costingInfo.add(new JLabel("Partner Performing Procedure: " +  patientApps.get( (i*11)+5 ) ) );
-							costingInfo.add(new JLabel("Pre-paid? : "));
-							if (Integer.valueOf(patientApps.get((i*11)+10))==1)
-								costingInfo.add(new JLabel("YES"));
-							else
-								costingInfo.add(new JLabel("NO"));
+						for (int i=0;i<(totalApps/10);i++){
+							costingInfo.add(new JLabel("Appointment Type: " +  patientApps.get(i*10) )  );
+							costingInfo.add(new JLabel("Date of Appointment: " +  patientApps.get( (i*10)+3 ) ));
+							costingInfo.add(new JLabel("Cost: " +  patientApps.get( (i*10)+4 ) ) );
+							costingInfo.add(new JLabel("Partner Performing Procedure: " +  patientApps.get( (i*10)+5 ) ) );
+							
+							String start = patientApps.get( (i*10)+1 );
+							String date = patientApps.get( (i*10)+3 );
+							String partner = patientApps.get( (i*10)+5 );
+							JButton breakdown = new JButton("View treatment breakdown");
+							breakdown.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseClicked(MouseEvent e) {
+									contentPane.removeAll();
+									int appID = 0;
+									try {
+										appID = SqlCreation.getAppId(start,date,partner);
+									} catch (Exception e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+									List<String> treatments = SqlCreation.getTreatments(appID);
+									
+									JPanel pricingBreakdown = new JPanel();
+									pricingBreakdown.setLayout(new GridLayout(0,2));
+									
+									for (int i=0;i<(treatments.size()/4);i++){
+									
+										pricingBreakdown.add(new JLabel("Treatement Description: " +  treatments.get(i*4)));
+	
+										pricingBreakdown.add(new JLabel("Cost: " +  treatments.get((i*4)+1)));
+	
+										pricingBreakdown.add(new JLabel("Type: " +  treatments.get((i*4)+2)));
+	
+										if (Integer.valueOf(treatments.get((i*4)+3))==1)
+											pricingBreakdown.add(new JLabel("Pre-paid: Yes"));
+										else
+											pricingBreakdown.add(new JLabel("Pre-paid: No"));
+										
+										
+									}
+									JButton returnButton = new JButton("RETURN TO CALENDAR");
+									returnButton.addMouseListener(new MouseAdapter() {
+										@Override
+										public void mouseClicked(MouseEvent e) {
+											contentPane.removeAll();
+
+											contentPane.add(toolBar_1, BorderLayout.EAST);
+											contentPane.add(datePanel, BorderLayout.CENTER);
+											contentPane.add(menuBar, BorderLayout.NORTH);
+											contentPane.setVisible(true);
+											contentPane.revalidate();
+											contentPane.repaint();
+										}
+									});
+
+
+									pricingBreakdown.add(returnButton);
+									contentPane.add(pricingBreakdown);
+									contentPane.revalidate();
+									contentPane.repaint();
+								}
+							});
+							costingInfo.add(breakdown);
 						}
 						costingInfo.add(new JLabel("Total Cost: " +  totalCost )  );
 
@@ -1022,7 +1197,6 @@ public class MainScreen extends JFrame {
 	}
 
 	toolBar_2.add(nextAppBtn2);
-	
 
 	JButton recordApps2 = new JButton("Record Last Appointment");
 	recordApps2.addMouseListener(new MouseAdapter() {
@@ -1073,43 +1247,79 @@ public class MainScreen extends JFrame {
 
 			appInfo.add(new JLabel("Appointment Time: " + lastApp.get(1) + " - "+ endTime));
 
-			appInfo.add(new JLabel("Assumed Cost: "  + lastApp.get(3) ));
+			appInfo.add(new JLabel("Base Cost: "  + lastApp.get(3) ));
 
-			appInfo.add(new JLabel("Enter Appointment Details:", JLabel.RIGHT));
+			JComboBox<String> type = new JComboBox<String>();
+			type.addItem("Check Up");
+			type.addItem("Hygiene");
+			type.addItem("Repair");
+			
+			appInfo.add(new JLabel("Treatment Type:", JLabel.RIGHT));
+			appInfo.add(type);
+			
+			appInfo.add(new JLabel("Enter Treatment Details:", JLabel.RIGHT));
 			JTextField details = new JTextField(25);
 			appInfo.add(details);
+			
 
-			appInfo.add(new JLabel("Enter Actual Cost:", JLabel.RIGHT));
+			appInfo.add(new JLabel("Enter Treatment Cost:", JLabel.RIGHT));
 			JTextField cost = new JTextField(25);
 			appInfo.add(cost);
+			
+			String forename = lastApp.get(6);
+			String surname = lastApp.get(7);
+			String doB = lastApp.get(10);
+			String contact = lastApp.get(8);
 
+			try {
+				int appID = SqlCreation.getAppId(lastApp.get(1), localDateStr, lastApp.get(4)); 
+				
 
-			JButton pricePatient = new JButton("Update Appointment Info");
+			JButton pricePatient = new JButton("Add treatment to Appointment");
 			pricePatient.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					String typeInput = type.getSelectedItem().toString();
 					String detailsInput = details.getText();
 					String costInput = cost.getText();
+					System.out.println(forename);
+					System.out.println(surname);
+					System.out.println(doB);
+					System.out.println(contact);
 					try {
-						SqlCreation.updateLastApp(costInput, detailsInput, id, date, time);
+						int patient = SqlCreation.getPatientId(forename,surname,doB,contact);
+		                int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
+		                System.out.println("FREE LEFT - " + freeLeft);
+		                    if (freeLeft==0){
+		                    	
+		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "0");
+		                    	SqlCreation.updateAppCost(String.valueOf(appID), costInput);
+		                    }
+		                    else  {
+		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "1");
+		                        SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
+		                        SqlCreation.updateAppCost(String.valueOf(appID), costInput);
+		                    }
+						
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 
 					contentPane.removeAll();
-
-					contentPane.add(toolBar_2, BorderLayout.EAST);
-					contentPane.add(datePanel, BorderLayout.CENTER);
-					contentPane.add(menuBar, BorderLayout.NORTH);
-					contentPane.setVisible(true);
+					contentPane.add(appInfo);
 					contentPane.revalidate();
 					contentPane.repaint();
 				}
 			});
+			
 			contentPane.removeAll();
 
 			appInfo.add(pricePatient);
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			JButton returnButton = new JButton("RETURN TO CALENDAR");
 			returnButton.addMouseListener(new MouseAdapter() {
 				@Override
@@ -1323,50 +1533,86 @@ public class MainScreen extends JFrame {
 
 			appInfo.add(new JLabel("Appointment Time: " + lastApp.get(1) + " - "+ endTime));
 
-			appInfo.add(new JLabel("Assumed Cost: "  + lastApp.get(3) ));
+			appInfo.add(new JLabel("Base Cost: "  + lastApp.get(3) ));
 
-			appInfo.add(new JLabel("Enter Appointment Details:", JLabel.RIGHT));
+			JComboBox<String> type = new JComboBox<String>();
+			type.addItem("Check Up");
+			type.addItem("Hygiene");
+			type.addItem("Repair");
+			
+			appInfo.add(new JLabel("Treatment Type:", JLabel.RIGHT));
+			appInfo.add(type);
+			
+			appInfo.add(new JLabel("Enter Treatment Details:", JLabel.RIGHT));
 			JTextField details = new JTextField(25);
 			appInfo.add(details);
+			
 
-			appInfo.add(new JLabel("Enter Actual Cost:", JLabel.RIGHT));
+			appInfo.add(new JLabel("Enter Treatment Cost:", JLabel.RIGHT));
 			JTextField cost = new JTextField(25);
 			appInfo.add(cost);
+			
+			String forename = lastApp.get(6);
+			String surname = lastApp.get(7);
+			String doB = lastApp.get(10);
+			String contact = lastApp.get(8);
 
+			try {
+				int appID = SqlCreation.getAppId(lastApp.get(1), localDateStr, lastApp.get(4)); 
+				
 
-			JButton pricePatient = new JButton("Update Appointment Info");
+			JButton pricePatient = new JButton("Add treatment to Appointment");
 			pricePatient.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					String typeInput = type.getSelectedItem().toString();
 					String detailsInput = details.getText();
 					String costInput = cost.getText();
+					System.out.println(forename);
+					System.out.println(surname);
+					System.out.println(doB);
+					System.out.println(contact);
 					try {
-						SqlCreation.updateLastApp(costInput, detailsInput, id, date, time);
+						int patient = SqlCreation.getPatientId(forename,surname,doB,contact);
+		                int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
+		                System.out.println("FREE LEFT - " + freeLeft);
+		                    if (freeLeft==0){
+		                    	
+		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "0");
+		                    	SqlCreation.updateAppCost(String.valueOf(appID), costInput);
+		                    }
+		                    else  {
+		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "1");
+		                        SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
+		                        SqlCreation.updateAppCost(String.valueOf(appID), costInput);
+		                    }
+						
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 
 					contentPane.removeAll();
-
-					contentPane.add(toolBar_3, BorderLayout.EAST);
-					contentPane.add(datePanel, BorderLayout.CENTER);
-					contentPane.add(menuBar, BorderLayout.NORTH);
-					contentPane.setVisible(true);
+					contentPane.add(appInfo);
 					contentPane.revalidate();
 					contentPane.repaint();
 				}
 			});
+			
 			contentPane.removeAll();
 
 			appInfo.add(pricePatient);
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			JButton returnButton = new JButton("RETURN TO CALENDAR");
 			returnButton.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					contentPane.removeAll();
 
-					contentPane.add(toolBar_3, BorderLayout.EAST);
+					contentPane.add(toolBar_2, BorderLayout.EAST);
 					contentPane.add(datePanel, BorderLayout.CENTER);
 					contentPane.add(menuBar, BorderLayout.NORTH);
 					contentPane.setVisible(true);
@@ -1387,7 +1633,7 @@ public class MainScreen extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					contentPane.removeAll();
 
-					contentPane.add(toolBar_3, BorderLayout.EAST);
+					contentPane.add(toolBar_2, BorderLayout.EAST);
 					contentPane.add(datePanel, BorderLayout.CENTER);
 					contentPane.add(menuBar, BorderLayout.NORTH);
 					contentPane.setVisible(true);

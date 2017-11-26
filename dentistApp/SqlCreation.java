@@ -19,9 +19,12 @@ public class SqlCreation {
 		
 		getConnection();
 		Connection conn = getConnection();
+		createTable();
 		deleteData();
 		PreparedStatement delete2 = conn.prepareStatement("DROP TABLE freeTreatments;");
 		delete2.executeUpdate();
+		PreparedStatement delete1 = conn.prepareStatement("DROP TABLE treatments;");
+		delete1.executeUpdate();
 		PreparedStatement delete3 = conn.prepareStatement("DROP TABLE appointments;");
 		delete3.executeUpdate();
 		PreparedStatement delete4 = conn.prepareStatement("DROP TABLE patients;");
@@ -51,20 +54,20 @@ public class SqlCreation {
 		registerPatient("DN370RX", "Church Lane", "Lincoln", "Grimsby", 1, 2, "Mr", "Harry", "Williams", dateOB, "7484659713");
 		registerPatient("DN370QW", "Main Road", "Lincoln", "Grimsby", 4, 2, "Mr", "Harold", "Williams", dateOB, "7484659713");
 		registerPatient("DN370RX", "Church Lane", "Lincoln", "Grimsby", 1, 0, "Mrs", "Janice", "Williams", dateOB, "7484659713");
-		insertAppointment(2, "Hygiene", dateOfApp, appTime, 60, 45.00, "Hygenist", false);
-		insertAppointment(4, "Repair", dateOfApp, appTime2, 45, 15.00, "Hygenist", false);
-		insertAppointment(3, "Check Up", dateOfApp, appTime3, 75, 20.00, "Hygenist", false);
-		insertAppointment(2, "Check Up", dateOfApp2, appTime4, 75, 20.00, "Dentist", false);
-		insertAppointment(3, "Hygiene", dateOfApp3, appTime7, 30, 45.00, "Dentist", false);
-		insertAppointment(4, "Hygiene", dateOfApp4, appTime2, 60, 45.00, "Hygenist", false);
-		insertAppointment(3, "Hygiene", dateOfApp5, appTime6, 60, 45.00, "Hygenist", false);
-		insertAppointment(2, "Hygiene", dateOfApp6, appTime, 30, 45.00, "Hygenist", true);
-		insertAppointment(4, "Hygiene", dateOfApp7, appTime5, 45, 45.00, "Dentist", false);
-		insertAppointment(2, "Hygiene", dateOfApp4, appTime5, 60, 45.00, "Hygenist", false);
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime4, 20, 45.00, "Hygenist", false);
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime3, 60, 35.00, "Hygenist", false);
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime2, 60, 45.00, "Hygenist", false);
-		insertAppointment(2, "Hygiene", dateOfApp5, appTime7, 60, 45.00, "Hygenist", false);
+		insertAppointment(2, "Hygiene", dateOfApp, appTime, 60, 45.00, "Hygenist");
+		insertAppointment(4, "Repair", dateOfApp, appTime2, 45, 15.00, "Hygenist");
+		insertAppointment(3, "Check Up", dateOfApp, appTime3, 75, 20.00, "Hygenist");
+		insertAppointment(2, "Check Up", dateOfApp2, appTime4, 75, 20.00, "Dentist");
+		insertAppointment(3, "Hygiene", dateOfApp3, appTime7, 30, 45.00, "Dentist");
+		insertAppointment(4, "Hygiene", dateOfApp4, appTime2, 60, 45.00, "Hygenist");
+		insertAppointment(3, "Hygiene", dateOfApp5, appTime6, 60, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp6, appTime, 30, 45.00, "Hygenist");
+		insertAppointment(4, "Hygiene", dateOfApp7, appTime5, 45, 45.00, "Dentist");
+		insertAppointment(2, "Hygiene", dateOfApp4, appTime5, 60, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime4, 20, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime3, 60, 35.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime2, 60, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp5, appTime7, 60, 45.00, "Hygenist");
 		getAppsOnDate(Date.valueOf("2017-11-21"), "Hygenist");
 		
 		}
@@ -86,13 +89,17 @@ public class SqlCreation {
 			createPatients.executeUpdate();
 			System.out.println("success patients");
 			
-			PreparedStatement createAppointments = conn.prepareStatement("CREATE TABLE IF NOT EXISTS appointments ( appointment_id INT NOT NULL UNIQUE AUTO_INCREMENT, patient_id INT NOT NULL, appointment_type VARCHAR(20), appointment_details VARCHAR(20), date DATE, start_time TIME, length_mins INT, cost DECIMAL(10, 2), partner VARCHAR(20), prePaid BOOL, PRIMARY KEY ( appointment_id ), FOREIGN KEY (patient_id) REFERENCES patients(patient_id) );");
+			PreparedStatement createAppointments = conn.prepareStatement("CREATE TABLE IF NOT EXISTS appointments ( appointment_id INT NOT NULL UNIQUE AUTO_INCREMENT, patient_id INT NOT NULL, appointment_type VARCHAR(20), date DATE, start_time TIME, length_mins INT, cost DECIMAL(10, 2), partner VARCHAR(20), PRIMARY KEY ( appointment_id ), FOREIGN KEY (patient_id) REFERENCES patients(patient_id) );");
 			createAppointments.executeUpdate();
 			System.out.println("success appointments");
 			
 			PreparedStatement createFreeTreatments = conn.prepareStatement("CREATE TABLE IF NOT EXISTS freeTreatments ( free_id INT NOT NULL UNIQUE AUTO_INCREMENT, patient_id INT NOT NULL, plan_id INT NOT NULL, check_ups TINYINT(1), hygiene TINYINT(1), repairs TINYINT(1), PRIMARY KEY ( free_id ), FOREIGN KEY (patient_id) REFERENCES patients(patient_id), FOREIGN KEY (plan_id) REFERENCES plans(plan_id) );");
 			createFreeTreatments.executeUpdate();
 			System.out.println("success free treatments");
+			
+			PreparedStatement createTreatments = conn.prepareStatement("CREATE TABLE IF NOT EXISTS treatments ( treatment_id INT NOT NULL UNIQUE AUTO_INCREMENT, appointment_id INT NOT NULL, treatment_info VARCHAR(80), cost DECIMAL(10, 2), treatment_type VARCHAR(20), prePaid BOOL, PRIMARY KEY ( treatment_id ), FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id) );");
+			createTreatments.executeUpdate();
+			System.out.println("success treatments");
 			
 		}catch(Exception e) {
 			
@@ -224,6 +231,10 @@ public static void deleteData() throws Exception {
 			deleteFree.executeUpdate();
 			System.out.println("deleted free treatments");
 			
+			PreparedStatement deleteTreatments = conn.prepareStatement("DELETE FROM treatments;");
+			deleteTreatments.executeUpdate();
+			System.out.println("deleted treatments");
+			
 			PreparedStatement deleteAppointments = conn.prepareStatement("DELETE FROM appointments;");
 			deleteAppointments.executeUpdate();
 			System.out.println("deleted appointments");
@@ -250,26 +261,13 @@ public static void deleteData() throws Exception {
 	
 	
 	
-public static void insertAppointment(int id, String appType, Date date, Time start, int length, double cost, String partner, boolean paid) throws Exception {
+public static void insertAppointment(int id, String appType, Date date, Time start, int length, double cost, String partner) throws Exception {
 		
 		try{
 			
 			Connection conn = getConnection();
 			
-			int paidInput;
-	
-			int left = getFreeRemaining(id, appType);
-			System.out.println(left);
-			System.out.println(paid);
-			
-			if(paid && left != 0) {
-				paidInput = 1;
-				updateFreeRemaining(id, appType, left);
-			}
-			else
-				paidInput = 0;
-			
-			PreparedStatement insertApp = conn.prepareStatement("INSERT IGNORE INTO appointments (patient_id, appointment_type, appointment_details, date, start_time, length_mins, cost, partner, prePaid) VALUES (" + id + ", '" + appType + "', '' , '" + date + "', '" + start + "', " + length + ", " + cost + ", '" + partner + "', '"+paidInput+"');");
+			PreparedStatement insertApp = conn.prepareStatement("INSERT IGNORE INTO appointments (patient_id, appointment_type, date, start_time, length_mins, cost, partner) VALUES (" + id + ", '" + appType + "' , '" + date + "', '" + start + "', " + length + ", " + cost + ", '" + partner + "');");
 			insertApp.executeUpdate();
 
 			System.out.println("APPOINTMENT INSERTED");
@@ -350,7 +348,10 @@ public static int getPatientId(String forename, String surname, String dOb, Stri
 		
 		try{
 			Connection conn = getConnection();
-			
+			System.out.println(forename);
+			System.out.println(surname);
+			System.out.println(dOb);
+			System.out.println(contactNo);
 			PreparedStatement getPatient = conn.prepareStatement("SELECT patient_id FROM patients WHERE forename = '" + forename + "' AND surname = '" + surname + "' AND birth = '" + dOb + "'  AND contact_number = '" + contactNo + "';");
 			ResultSet patient_id = getPatient.executeQuery();
 			
@@ -366,6 +367,28 @@ public static int getPatientId(String forename, String surname, String dOb, Stri
 			e.printStackTrace();
 		}
 		return 1;
+}
+
+public static int getAppId(String start, String date, String partner) throws Exception {
+	
+	try{
+		Connection conn = getConnection();
+		
+		PreparedStatement getPatient = conn.prepareStatement("SELECT appointment_id FROM appointments WHERE start_time = '" + start + "' AND date = '" + date + "' AND partner = '" + partner + "';");
+		ResultSet app_id = getPatient.executeQuery();
+		
+		int id = 1;
+		
+		if(app_id.next()){
+			id = Integer.valueOf( app_id.getString(1)  );
+		}
+		System.out.println("GOT APPOINTMENT ID, IT IS - " + id);
+		return id;
+	} catch(Exception e){
+		
+		e.printStackTrace();
+	}
+	return 1;
 }
 	
 	
@@ -715,7 +738,7 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		
 	closestTime = (String.valueOf(closestHour)+":"+String.valueOf(closestMin)+":00");
 			
-	PreparedStatement getClosestApp = conn.prepareStatement("SELECT appointment_type, start_time, length_mins, cost, partner, title, forename, surname, contact_number, patients.patient_id, date FROM appointments INNER JOIN patients ON appointments.patient_id = patients.patient_id WHERE start_time = '"+closestTime+"' AND date ='"+date+"';");
+	PreparedStatement getClosestApp = conn.prepareStatement("SELECT appointment_type, start_time, length_mins, cost, partner, title, forename, surname, contact_number, patients.patient_id, birth FROM appointments INNER JOIN patients ON appointments.patient_id = patients.patient_id WHERE start_time = '"+closestTime+"' AND date ='"+date+"';");
 	ResultSet app = getClosestApp.executeQuery();
 		
 	List<String> appInfo = new ArrayList<String>();
@@ -745,7 +768,7 @@ public static List<String> getLastApp(String date, String time) throws Exception
 
 		Connection conn = getConnection();
 		
-		PreparedStatement getPatientApps = conn.prepareStatement("SELECT appointment_type, start_time, length_mins, date, cost, partner, title, forename, surname, contact_number, prePaid FROM appointments INNER JOIN patients ON appointments.patient_id = patients.patient_id WHERE appointments.patient_id = '"+patient+"';");
+		PreparedStatement getPatientApps = conn.prepareStatement("SELECT appointment_type, start_time, length_mins, date, cost, partner, title, forename, surname, contact_number FROM appointments INNER JOIN patients ON appointments.patient_id = patients.patient_id WHERE appointments.patient_id = '"+patient+"';");
 		ResultSet patientAppResult = getPatientApps.executeQuery();
 		
 		List<String> patientApps = new ArrayList<String>();
@@ -761,7 +784,6 @@ public static List<String> getLastApp(String date, String time) throws Exception
 			patientApps.add(patientAppResult.getString(8));
 			patientApps.add(patientAppResult.getString(9));
 			patientApps.add(patientAppResult.getString(10));
-			patientApps.add(patientAppResult.getString(11));
 		}
 		
 		return patientApps;
@@ -772,14 +794,19 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		// TODO Auto-generated method stub
 		Connection conn = getConnection();
 		
+		System.out.println(patient);
+		System.out.println(type);
+		
 		PreparedStatement getFree = conn.prepareStatement("SELECT check_ups, hygiene, repairs FROM freeTreatments WHERE patient_id = '"+patient+"';");
 		ResultSet freeRem = getFree.executeQuery();
 		
 		if (freeRem.next()){
 			if (type=="Check Up")
 				return Integer.valueOf(freeRem.getString(1));
-			else if (type=="Hygiene")
+			else if (type=="Hygiene"){
+				System.out.println("Checking Hygiene");
 				return Integer.valueOf(freeRem.getString(2));
+			}
 			else if (type=="Repair")
 				return Integer.valueOf(freeRem.getString(3));
 			else
@@ -814,16 +841,68 @@ public static List<String> getLastApp(String date, String time) throws Exception
 	}
 	
 	
-	public static void updateLastApp(String cost, String info, String patient, String date, String time) throws Exception {
+	public static void insertTreatmentApp(String id, String cost, String info, String type, String paid) throws Exception {
 		// TODO Auto-generated method stub
 		Connection conn = getConnection();
-		
-		System.out.println(date);
-		System.out.println(time);
 
-		PreparedStatement updateInfo = conn.prepareStatement("UPDATE appointments SET cost = '"+cost+"', appointment_details='"+info+"' WHERE patient_id = '"+patient+"' AND date ='"+date+"' AND start_time='"+time+"';");
+		PreparedStatement updateInfo = conn.prepareStatement("INSERT IGNORE INTO treatments SET appointment_id='"+id+"', cost = '"+cost+"', treatment_info='"+info+"', treatment_type='"+type+"', prePaid='"+paid+"';");
 		updateInfo.executeUpdate();
 
+		
+	}
+	
+	
+	
+
+
+	public static void updateAppCost(String id, String costInput) throws Exception {
+		// TODO Auto-generated method stub
+		Connection conn = getConnection();
+		float current = 0;
+		System.out.println("ID IS " +id);
+		PreparedStatement getCost = conn.prepareStatement("SELECT cost FROM appointments WHERE appointment_id = '"+id+"';");
+		ResultSet cost = getCost.executeQuery();
+		if(cost.next())
+			current = Float.valueOf(cost.getString(1));
+		
+		int currentI = (int) current;
+		int newCost = (currentI+Integer.valueOf(costInput));
+		PreparedStatement updateApp = conn.prepareStatement("UPDATE appointments SET cost = '"+newCost+"' WHERE appointment_id = '"+id+"';");
+		updateApp.executeUpdate();
+	}
+
+
+	public static List<String> getTreatments(int appID) {
+		// TODO Auto-generated method stub
+		
+		try{
+			Connection conn = getConnection();
+			PreparedStatement getTreatments = conn.prepareStatement("SELECT treatment_info, cost, treatment_type, prePaid FROM treatments WHERE appointment_id = '"+appID+"';");
+			
+			ResultSet apps = getTreatments.executeQuery();
+			
+			List<String> appointments = new ArrayList<String>();
+			
+			
+			while(apps.next()){
+				appointments.add(apps.getString(1));
+				appointments.add(apps.getString(2));
+				appointments.add(apps.getString(3));
+				appointments.add(apps.getString(4));
+			}
+			System.out.println(appointments);
+			
+			return appointments;
+			
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+		}
+		return null;
+		
+		
 		
 	}
 	
@@ -851,9 +930,6 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		
 		
 	}
-	
-	
-	
 
 
 	

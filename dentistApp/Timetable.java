@@ -300,7 +300,6 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 					
 					try {
 						patient = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);
-						int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
 						if (patient == 1){
 							JOptionPane.showMessageDialog(contentPane1, "Invalid user, please register first");
 						}
@@ -311,12 +310,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 							contentPane1.repaint();
 						}
 						else{
-							if (freeLeft==0)
-								SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, false);
-							else  {
-								SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, true);
-								SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
-							}
+							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput);
 							createTimetable(contentPane1, currentDate, user);
 							addAppForm(contentPane1, currentDate, user);
 						}
@@ -402,7 +396,7 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 							int patient = 1;
 							
 							try {
-								SqlCreation.insertAppointment(patient, "HOLIDAY", dateInput, Time.valueOf("09:00:00"), 480, 0, partnerHolInput, false);
+								SqlCreation.insertAppointment(patient, "HOLIDAY", dateInput, Time.valueOf("09:00:00"), 480, 0, partnerHolInput);
 							} catch (Exception e2) {
 								// TODO Auto-generated catch block
 								e2.printStackTrace();
