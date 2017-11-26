@@ -496,6 +496,7 @@ public class MainScreen extends JFrame {
 				regPatient.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
+						try { 
 						String forenameInput = forename.getText();
 						String surnameInput = surname.getText();
 						String titleInput = title.getText();
@@ -513,12 +514,19 @@ public class MainScreen extends JFrame {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
+						
 
 						contentPane.remove(registerForm);
 						contentPane.add(datePanel, BorderLayout.CENTER);
 						contentPane.add(menuBar, BorderLayout.NORTH);
 						setContentPane(contentPane);
 						contentPane.repaint();
+						}
+						catch(IllegalArgumentException ec) {
+							JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+							contentPane.add(registerForm);
+							contentPane.revalidate();
+							contentPane.repaint();}
 					}
 				});
 				registerForm.add(regPatient);
@@ -788,6 +796,7 @@ public class MainScreen extends JFrame {
 				planSub.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
+						try {
 						String forenameInput = forename.getText();
 						String surnameInput = surname.getText();
 						String birthInput = birth.getText();
@@ -808,6 +817,11 @@ public class MainScreen extends JFrame {
 						contentPane.add(menuBar, BorderLayout.NORTH);
 						contentPane.revalidate();
 						contentPane.repaint();
+						} catch(IllegalArgumentException ec) {
+							JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+							contentPane.add(planInfo);
+							contentPane.revalidate();
+							contentPane.repaint();}
 					}
 				});
 				
@@ -907,6 +921,7 @@ public class MainScreen extends JFrame {
 			pricePatient.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					try {
 					String forenameInput = forename.getText();
 					String surnameInput = surname.getText();
 					String birthInput = birth.getText();
@@ -1020,6 +1035,11 @@ public class MainScreen extends JFrame {
 					}
 					contentPane.revalidate();
 					contentPane.repaint();
+					} catch(IllegalArgumentException ec) {
+						JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+						contentPane.add(pricingInfo);
+						contentPane.revalidate();
+						contentPane.repaint();}
 				}
 			});
 
@@ -1094,6 +1114,7 @@ public class MainScreen extends JFrame {
 			getPatientApp.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					try {
 					String forenameInput = forename.getText();
 					String surnameInput = surname.getText();
 					String birthInput = birth.getText();
@@ -1158,6 +1179,11 @@ public class MainScreen extends JFrame {
 					}
 					contentPane.revalidate();
 					contentPane.repaint();
+					} 	catch(IllegalArgumentException ec) {
+						JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+						contentPane.add(appInfo);
+						contentPane.revalidate();
+						contentPane.repaint();}
 				}
 			});
 
@@ -1685,6 +1711,7 @@ public class MainScreen extends JFrame {
 			pricePatient.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					try {
 					String typeInput = type.getSelectedItem().toString();
 					String detailsInput = details.getText();
 					String costInput = cost.getText();
@@ -1716,6 +1743,11 @@ public class MainScreen extends JFrame {
 					contentPane.add(appInfo);
 					contentPane.revalidate();
 					contentPane.repaint();
+					}	catch(IllegalArgumentException ec) {
+						JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+						contentPane.add(appInfo);
+						contentPane.revalidate();
+						contentPane.repaint();}
 				}
 			});
 			
