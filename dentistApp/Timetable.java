@@ -302,6 +302,9 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 						patient = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);
 						if (patient == 1){
 							JOptionPane.showMessageDialog(contentPane1, "Invalid user, please register first");
+							contentPane1.add(appointmentForm);
+							contentPane1.revalidate();
+							contentPane1.repaint();
 						}
 						else if( SqlCreation.checkOverlap(dateInput.toString(), partnerInput, startInput, lengthInput, patient) ) {
 							JOptionPane.showMessageDialog(contentPane1, "Overlap of appointments!");

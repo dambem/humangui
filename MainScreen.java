@@ -55,6 +55,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -255,8 +256,9 @@ public class MainScreen extends JFrame {
 
 		JLabel lblNewLabel_1 = new JLabel("Date Chosen:");
 		toolBar_1.add(lblNewLabel_1);
-
-		JLabel lblNewLabel_2 = new JLabel("12/11/18");
+		LocalDate localDate4 = LocalDate.now();
+		String localDateStr4 = localDate4.toString();
+		JLabel lblNewLabel_2 = new JLabel(localDateStr4);
 		toolBar_1.add(lblNewLabel_2);
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -283,7 +285,13 @@ public class MainScreen extends JFrame {
 				appointmentForm.add(type);
 				
 				appointmentForm.add(new JLabel("Date:", JLabel.RIGHT));
-				JTextField date = new JTextField(25);
+				UtilDateModel model = new UtilDateModel();
+				Properties p = new Properties();
+				model.setSelected(true);
+				p.put("text.today", "Today");
+				p.put("text.month", "Month");
+				p.put("text.year", "Year");
+				JDatePicker date = new JDatePicker(model);
 				appointmentForm.add(date);
 				
 				appointmentForm.add(new JLabel("Patient Forename:", JLabel.RIGHT));
@@ -333,7 +341,7 @@ public class MainScreen extends JFrame {
     						
     						String forenameInput = forename.getText();
     						String surnameInput = surname.getText();
-    						Date dateInput = Date.valueOf(date.getText());
+    						Date dateInput = Date.valueOf(date.getModel().getYear()+"-"+(date.getModel().getMonth()+1)+"-"+date.getModel().getDay());
     						String birthInput = birth.getText();
     						String phoneInput = phone.getText();
     						Time startInput = Time.valueOf(start.getText());
@@ -451,7 +459,7 @@ public class MainScreen extends JFrame {
 				registerForm.add(title);
 				title.setDocument(new JTextFieldLimit(4));
 
-				registerForm.add(new JLabel(" Forname:", JLabel.RIGHT));
+				registerForm.add(new JLabel(" Forename:", JLabel.RIGHT));
 				JTextField forename = new JTextField(25);
 				registerForm.add(forename);
 
@@ -769,7 +777,7 @@ public class MainScreen extends JFrame {
 			JPanel pricingInfo = new JPanel();
 			pricingInfo.setLayout(new GridLayout(0,2));
 
-			pricingInfo.add(new JLabel("Forname:", JLabel.RIGHT));
+			pricingInfo.add(new JLabel("Forename:", JLabel.RIGHT));
 			JTextField forename = new JTextField(25);
 			pricingInfo.add(forename);
 
@@ -1096,7 +1104,7 @@ public class MainScreen extends JFrame {
 	JLabel lblNewLabel_3 = new JLabel("Date Chosen:");
 	toolBar_2.add(lblNewLabel_3);
 
-	JLabel lblNewLabel_4 = new JLabel("12/11/18");
+	JLabel lblNewLabel_4 = new JLabel(localDateStr);
 	toolBar_2.add(lblNewLabel_4);
 	lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
 
