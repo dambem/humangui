@@ -318,10 +318,6 @@ public class MainScreen extends JFrame {
 				JTextField length = new JTextField(32);
 				appointmentForm.add(length);
 				
-				appointmentForm.add(new JLabel("Cost:", JLabel.RIGHT));
-				JTextField cost = new JTextField(25);
-				appointmentForm.add(cost);
-				
 				
 				JComboBox<String> partner = new JComboBox<String>();
                 partner.addItem("Dentist");
@@ -346,7 +342,6 @@ public class MainScreen extends JFrame {
     						String phoneInput = phone.getText();
     						Time startInput = Time.valueOf(start.getText());
     						int lengthInput = Integer.valueOf(length.getText());
-    						float costInput = Float.valueOf(cost.getText());
     						String partnerInput = (String) partner.getSelectedItem();
     						String typeInput = (String) type.getSelectedItem();
     						
@@ -363,7 +358,7 @@ public class MainScreen extends JFrame {
     							
     						}
     						else {
-    							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput);
+    							SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, 0, partnerInput);
     						}
 						} catch (Exception e1) {
 						    JOptionPane.showMessageDialog(frame, "Invalid entries, try Add New again");

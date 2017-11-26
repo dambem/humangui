@@ -17,8 +17,6 @@ import java.util.List;
 public class SqlCreation {
 
 	public static void main(String[] args) throws Exception {
-		
-		getConnection();
 		Connection conn = getConnection();
 		createTable();
 		deleteData();
@@ -55,20 +53,20 @@ public class SqlCreation {
 		registerPatient("DN370RX", "Church Lane", "Lincoln", "Grimsby", 1, 2, "Mr", "Harry", "Williams", dateOB, "7484659713");
 		registerPatient("DN370QW", "Main Road", "Lincoln", "Grimsby", 4, 2, "Mr", "Harold", "Williams", dateOB, "7484659713");
 		registerPatient("DN370RX", "Church Lane", "Lincoln", "Grimsby", 1, 0, "Mrs", "Janice", "Williams", dateOB, "7484659713");
-		insertAppointment(2, "Hygiene", dateOfApp, appTime, 60, 45.00, "Hygenist");
-		insertAppointment(4, "Repair", dateOfApp, appTime2, 45, 15.00, "Hygenist");
-		insertAppointment(3, "Check Up", dateOfApp, appTime3, 75, 20.00, "Hygenist");
-		insertAppointment(2, "Check Up", dateOfApp2, appTime4, 75, 20.00, "Dentist");
-		insertAppointment(3, "Hygiene", dateOfApp3, appTime7, 30, 45.00, "Dentist");
-		insertAppointment(4, "Hygiene", dateOfApp4, appTime2, 60, 45.00, "Hygenist");
-		insertAppointment(3, "Hygiene", dateOfApp5, appTime6, 60, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp6, appTime, 30, 45.00, "Hygenist");
-		insertAppointment(4, "Hygiene", dateOfApp7, appTime5, 45, 45.00, "Dentist");
-		insertAppointment(2, "Hygiene", dateOfApp4, appTime5, 60, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime4, 20, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime3, 60, 35.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime2, 60, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp5, appTime7, 60, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp, appTime, 0, 45.00, "Hygenist");
+		insertAppointment(4, "Repair", dateOfApp, appTime2, 0, 15.00, "Hygenist");
+		insertAppointment(3, "Check Up", dateOfApp, appTime3, 0, 20.00, "Hygenist");
+		insertAppointment(2, "Check Up", dateOfApp2, appTime4, 0, 20.00, "Dentist");
+		insertAppointment(3, "Hygiene", dateOfApp3, appTime7, 0, 45.00, "Dentist");
+		insertAppointment(4, "Hygiene", dateOfApp4, appTime2, 0, 45.00, "Hygenist");
+		insertAppointment(3, "Hygiene", dateOfApp5, appTime6, 0, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp6, appTime, 0, 45.00, "Hygenist");
+		insertAppointment(4, "Hygiene", dateOfApp7, appTime5, 0, 45.00, "Dentist");
+		insertAppointment(2, "Hygiene", dateOfApp4, appTime5, 0, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime4, 0, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime3, 0, 35.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime2, 0, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp5, appTime7, 0, 45.00, "Hygenist");
 		getAppsOnDate(Date.valueOf("2017-11-21"), "Hygenist");
 		
 		}
