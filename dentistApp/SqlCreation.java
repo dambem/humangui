@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,7 +94,7 @@ public class SqlCreation {
 			createAppointments.executeUpdate();
 			System.out.println("success appointments");
 			
-			PreparedStatement createFreeTreatments = conn.prepareStatement("CREATE TABLE IF NOT EXISTS freeTreatments ( free_id INT NOT NULL UNIQUE AUTO_INCREMENT, patient_id INT NOT NULL, plan_id INT NOT NULL, check_ups TINYINT(1), hygiene TINYINT(1), repairs TINYINT(1), PRIMARY KEY ( free_id ), FOREIGN KEY (patient_id) REFERENCES patients(patient_id), FOREIGN KEY (plan_id) REFERENCES plans(plan_id) );");
+			PreparedStatement createFreeTreatments = conn.prepareStatement("CREATE TABLE IF NOT EXISTS freeTreatments ( free_id INT NOT NULL UNIQUE AUTO_INCREMENT, patient_id INT NOT NULL, plan_id INT NOT NULL, check_ups TINYINT(1), hygiene TINYINT(1), repairs TINYINT(1), expiry DATE , PRIMARY KEY ( free_id ), FOREIGN KEY (patient_id) REFERENCES patients(patient_id), FOREIGN KEY (plan_id) REFERENCES plans(plan_id) );");
 			createFreeTreatments.executeUpdate();
 			System.out.println("success free treatments");
 			
@@ -431,6 +432,11 @@ public static int getAppId(String start, String date, String partner) throws Exc
 			}
 			System.out.println("GOT PATIENT ID, IT IS - " + id);
 			
+			LocalDate localDate = LocalDate.now();
+			LocalDate nextYear = localDate.plusYears(1);
+			System.out.print(nextYear);
+			String localDateStr = nextYear.toString();
+			
 			int checkUps, hygiene, repairs;
 			
 			if (plan == 0){ checkUps = 0; hygiene = 0; repairs = 0; }
@@ -439,7 +445,7 @@ public static int getAppId(String start, String date, String partner) throws Exc
 			else if (plan == 3){ checkUps = 2; hygiene = 4; repairs = 0; }
 			else { checkUps = 2; hygiene = 2; repairs = 2; }
 			
-			PreparedStatement getFree = conn.prepareStatement("INSERT IGNORE INTO freeTreatments ( patient_id, plan_id, check_ups, hygiene, repairs) VALUES (" + patient_id.getString(1) + ", " + plan + ", '" + checkUps + "', '" + hygiene + "', '" + repairs + "');");
+			PreparedStatement getFree = conn.prepareStatement("INSERT IGNORE INTO freeTreatments ( patient_id, plan_id, check_ups, hygiene, repairs, expiry) VALUES (" + patient_id.getString(1) + ", " + plan + ", '" + checkUps + "', '" + hygiene + "', '" + repairs + "', '"+localDateStr+"');");
 			getFree.executeUpdate();
 			
 			
@@ -906,6 +912,33 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		
 	}
 	
+
+
+	public static void updatePlan(int plan, int patient) throws Exception {
+		// TODO Auto-generated method stub
+		Connection conn = getConnection();
+		PreparedStatement updateFree = conn.prepareStatement("UPDATE patients SET plan_id = '"+plan+"' WHERE patient_id = '"+patient+"';");
+		updateFree.executeUpdate();
+		
+		LocalDate localDate = LocalDate.now();
+		LocalDate nextYear = localDate.plusYears(1);
+		String localDateStr = nextYear.toString();
+		
+		int checkUps=0, hygiene=0, repairs=0;
+		
+		if (plan == 0){ checkUps = 0; hygiene = 0; repairs = 0; }
+		else if (plan == 1){ checkUps = 2; hygiene = 2; repairs = 6; }
+		else if (plan == 2){ checkUps = 2; hygiene = 2; repairs = 0; }
+		else if (plan == 3){ checkUps = 2; hygiene = 4; repairs = 0; }
+		else { checkUps = 2; hygiene = 2; repairs = 2; }
+		
+		
+		PreparedStatement insertFree = conn.prepareStatement("UPDATE freeTreatments SET plan_id='" + plan + "', check_ups='" + checkUps + "', hygiene='" + hygiene + "', repairs='" + repairs + "', expiry='"+localDateStr+"' WHERE patient_id='"+patient+"';");
+		insertFree.executeUpdate();
+		
+	}
+
+	
 	
 	public static Connection getConnection() throws Exception {
 		try{
@@ -929,10 +962,7 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		
 		
 		
-	}
-
-
-	
+	}	
 	
 	
 	
