@@ -213,74 +213,101 @@ public class MainScreen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				contentPane.removeAll();
-				contentPane.add(toolBar_1, BorderLayout.EAST);
-
+				
 				JPanel appointmentForm = new JPanel();
-				appointmentForm.setLayout(new GridLayout(0,2));
+				
 				JComboBox<String> type = new JComboBox<String>();
 				type.addItem("Check Up");
 				type.addItem("Hygiene");
 				type.addItem("Repair");
-
-				appointmentForm.add(new JLabel("Appointment Type:", JLabel.RIGHT));
+				
+				appointmentForm.add(new JLabel("              Appointment Type:", JLabel.LEFT));
 				appointmentForm.add(type);
-
-				appointmentForm.add(new JLabel("Patient Forename:", JLabel.RIGHT));
+				
+				appointmentForm.add(new JLabel("Date:", JLabel.LEFT));
+				JTextField date = new JTextField(25);
+				appointmentForm.add(date);
+				
+				appointmentForm.add(new JLabel("Patient Forename:", JLabel.LEFT));
 				JTextField forename = new JTextField(25);
 				appointmentForm.add(forename);
-
-				appointmentForm.add(new JLabel("Patient Surname:", JLabel.RIGHT));
+				
+				appointmentForm.add(new JLabel("Patient Surname:", JLabel.LEFT));
 				JTextField surname = new JTextField(25);
 				appointmentForm.add(surname);
-
-				appointmentForm.add(new JLabel("Start Time (hh:mm:ss):", JLabel.RIGHT));
+				
+				appointmentForm.add(new JLabel("Birth date (form yyyy-mm-dd):", JLabel.LEFT));
+				JTextField birth = new JTextField(32);
+				appointmentForm.add(birth);
+				
+				appointmentForm.add(new JLabel("Phone No:", JLabel.LEFT));
+				JTextField phone = new JTextField(25);
+				appointmentForm.add(phone);
+				
+				appointmentForm.add(new JLabel("Start Time (hh:mm:ss):", JLabel.LEFT));
 				JTextField start = new JTextField(25);
 				appointmentForm.add(start);
-
-				appointmentForm.add(new JLabel("Length(mins):", JLabel.RIGHT));
+				
+				appointmentForm.add(new JLabel("Length(mins):", JLabel.LEFT));
 				JTextField length = new JTextField(32);
 				appointmentForm.add(length);
-
-				appointmentForm.add(new JLabel("Cost:", JLabel.RIGHT));
+				
+				appointmentForm.add(new JLabel("Cost:", JLabel.LEFT));
 				JTextField cost = new JTextField(25);
 				appointmentForm.add(cost);
 				
-				JComboBox<String> partner = new JComboBox<String>();
-                partner.addItem("Hygienist");
-                partner.addItem("Dentist");
-                appointmentForm.add(new JLabel("Partner:", JLabel.RIGHT));
-                appointmentForm.add(partner);
-
+				appointmentForm.add(new JLabel("Partner:", JLabel.LEFT));
+				JTextField partner = new JTextField(25);
+				appointmentForm.add(partner);
+			
 				JPanel buttons = new JPanel();
 				buttons.setLayout(new FlowLayout());
-
-
+				
 				JButton bookApp = new JButton("Book Appointment");
 				bookApp.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-					    if (forename.getText().trim().isEmpty() || surname.getText().trim().isEmpty()) {
-					        JOptionPane.showMessageDialog(null, "There were invalid entries, try again");
-					    }
-					    
-					    try {
-					        int n;
-					        n = Integer.parseInt(length.getText());
-					        n = Integer.parseInt(cost.getText());
-					        
-					        contentPane.remove(appointmentForm);
-	                        contentPane.add(datePanel, BorderLayout.CENTER);
-	                        contentPane.add(menuBar, BorderLayout.NORTH);
-	                        setContentPane(contentPane);
-	                        contentPane.repaint();
-					    } catch (NumberFormatException e1) {
-					        JOptionPane.showMessageDialog(null, "There were invalid entries, try again");
-					    }
+						contentPane.remove(appointmentForm);
+						
+						String forenameInput = forename.getText();
+						String surnameInput = surname.getText();
+						Date dateInput = Date.valueOf(date.getText());
+						String birthInput = birth.getText();
+						String phoneInput = phone.getText();
+						Time startInput = Time.valueOf(start.getText());
+						int lengthInput = Integer.valueOf(length.getText());
+						float costInput = Float.valueOf(cost.getText());
+						String partnerInput = partner.getText();
+						String typeInput = (String) type.getSelectedItem();
+						
+						int patient = 1;
+						
+						
+						
+						try {
+							patient = SqlCreation.getPatientId(forenameInput, surnameInput, birthInput, phoneInput);
+							int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
+							if (freeLeft==0)
+								SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, false);
+							else  {
+								SqlCreation.insertAppointment(patient, typeInput, dateInput, startInput, lengthInput, costInput, partnerInput, true);
+								SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
+							}
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						contentPane.remove(appointmentForm);
+						contentPane.add(datePanel, BorderLayout.CENTER);
+						contentPane.add(menuBar, BorderLayout.NORTH);
+						contentPane.add(toolBar_1, BorderLayout.EAST);
+						contentPane.revalidate();
+						contentPane.repaint();
 					}
 				});
-				appointmentForm.add(bookApp);
-
-				JButton calReturn = new JButton("View Calendar");
+				buttons.add(bookApp);
+				
+				JButton calReturn = new JButton("Return to Calendar");
 				calReturn.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -291,14 +318,11 @@ public class MainScreen extends JFrame {
 						contentPane.repaint();
 					}
 				});
-				appointmentForm.add(calReturn);
-
+				
+				buttons.add(calReturn);
 				appointmentForm.add(buttons);
-				contentPane.add(appointmentForm, BorderLayout.CENTER);
-
-
-				setContentPane(contentPane);
-
+				contentPane.add(appointmentForm);
+				contentPane.revalidate();
 				contentPane.repaint();
 			}
 		});
