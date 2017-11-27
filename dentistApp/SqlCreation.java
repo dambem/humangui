@@ -53,20 +53,20 @@ public class SqlCreation {
 		registerPatient("DN370RX", "Church Lane", "Lincoln", "Grimsby", 1, 2, "Mr", "Harry", "Williams", dateOB, "7484659713");
 		registerPatient("DN370QW", "Main Road", "Lincoln", "Grimsby", 4, 2, "Mr", "Harold", "Williams", dateOB, "7484659713");
 		registerPatient("DN370RX", "Church Lane", "Lincoln", "Grimsby", 1, 0, "Mrs", "Janice", "Williams", dateOB, "7484659713");
-		insertAppointment(2, "Hygiene", dateOfApp, appTime, 0, 45.00, "Hygenist");
-		insertAppointment(4, "Repair", dateOfApp, appTime2, 0, 15.00, "Hygenist");
-		insertAppointment(3, "Check Up", dateOfApp, appTime3, 0, 20.00, "Hygenist");
-		insertAppointment(2, "Check Up", dateOfApp2, appTime4, 0, 20.00, "Dentist");
-		insertAppointment(3, "Hygiene", dateOfApp3, appTime7, 0, 45.00, "Dentist");
-		insertAppointment(4, "Hygiene", dateOfApp4, appTime2, 0, 45.00, "Hygenist");
-		insertAppointment(3, "Hygiene", dateOfApp5, appTime6, 0, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp6, appTime, 0, 45.00, "Hygenist");
-		insertAppointment(4, "Hygiene", dateOfApp7, appTime5, 0, 45.00, "Dentist");
-		insertAppointment(2, "Hygiene", dateOfApp4, appTime5, 0, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime4, 0, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime3, 0, 35.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp7, appTime2, 0, 45.00, "Hygenist");
-		insertAppointment(2, "Hygiene", dateOfApp5, appTime7, 0, 45.00, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp, appTime, 60, 0, "Hygenist");
+		insertAppointment(4, "Repair", dateOfApp, appTime2, 60, 0, "Hygenist");
+		insertAppointment(3, "Check Up", dateOfApp, appTime3, 60, 0, "Hygenist");
+		insertAppointment(2, "Check Up", dateOfApp2, appTime4, 60, 0, "Dentist");
+		insertAppointment(3, "Hygiene", dateOfApp3, appTime7, 20, 0, "Dentist");
+		insertAppointment(4, "Hygiene", dateOfApp4, appTime2, 20, 0, "Hygenist");
+		insertAppointment(3, "Hygiene", dateOfApp5, appTime6, 20, 0, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp6, appTime, 40, 0, "Hygenist");
+		insertAppointment(4, "Hygiene", dateOfApp7, appTime5, 40, 0, "Dentist");
+		insertAppointment(2, "Hygiene", dateOfApp4, appTime5, 20, 0, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime4, 20, 0, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime3, 20, 0, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp7, appTime2, 60, 0, "Hygenist");
+		insertAppointment(2, "Hygiene", dateOfApp5, appTime7, 60, 0, "Hygenist");
 		getAppsOnDate(Date.valueOf("2017-11-21"), "Hygenist");
 		
 		}

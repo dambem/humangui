@@ -969,7 +969,7 @@ public class MainScreen extends JFrame {
 										e1.printStackTrace();
 									}
 									List<String> treatments = SqlCreation.getTreatments(appID);
-									
+									float costing = 0;
 									JPanel pricingBreakdown = new JPanel();
 									pricingBreakdown.setLayout(new GridLayout(0,2));
 									
@@ -983,11 +983,14 @@ public class MainScreen extends JFrame {
 	
 										if (Integer.valueOf(treatments.get((i*4)+3))==1)
 											pricingBreakdown.add(new JLabel("Pre-paid: Yes"));
-										else
+										else{
 											pricingBreakdown.add(new JLabel("Pre-paid: No"));
-										
+											costing += Float.valueOf(treatments.get((i*4)+1));
+										}
 										
 									}
+									
+									pricingBreakdown.add(new JLabel("Total Cost: " +  costing));
 									JButton returnButton = new JButton("RETURN TO CALENDAR");
 									returnButton.addMouseListener(new MouseAdapter() {
 										@Override
@@ -1455,7 +1458,6 @@ public class MainScreen extends JFrame {
 		                    else  {
 		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "1");
 		                        SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
-		                        SqlCreation.updateAppCost(String.valueOf(appID), costInput);
 		                        JOptionPane.showMessageDialog(contentPane, "Treatment Added!");
 		                    }
 						
@@ -1520,9 +1522,6 @@ public class MainScreen extends JFrame {
 
 		contentPane.add(appInfo);
 		contentPane.setVisible(true);
-		contentPane.revalidate();
-		contentPane.repaint();
-
 		contentPane.revalidate();
 		contentPane.repaint();
 		}
@@ -1724,47 +1723,51 @@ public class MainScreen extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					try {
-					String typeInput = type.getSelectedItem().toString();
-					String detailsInput = details.getText();
-					String costInput = cost.getText();
-					System.out.println(forename);
-					System.out.println(surname);
-					System.out.println(doB);
-					System.out.println(contact);
-					cost.setText("");
-					details.setText("");
-					contentPane.repaint();
-					try {
-						int patient = SqlCreation.getPatientId(forename,surname,doB,contact);
-		                int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
-		                System.out.println("FREE LEFT - " + freeLeft);
-		                    if (freeLeft==0){
-		                    	
-		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "0");
-		                    	SqlCreation.updateAppCost(String.valueOf(appID), costInput);
-		                    	JOptionPane.showMessageDialog(contentPane, "Treatment Added!");
-		                    }
-		                    else  {
-		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "1");
-		                        SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
-		                        SqlCreation.updateAppCost(String.valueOf(appID), costInput);
-		                        JOptionPane.showMessageDialog(contentPane, "Treatment Added!");
-		                    }
-						
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
-					contentPane.removeAll();
-					contentPane.add(appInfo);
-					contentPane.revalidate();
-					contentPane.repaint();
+						String typeInput = type.getSelectedItem().toString();
+						String detailsInput = details.getText();
+						String costInput = cost.getText();
+						System.out.println(forename);
+						System.out.println(surname);
+						System.out.println(doB);
+						System.out.println(contact);
+						cost.setText("");
+						details.setText("");
+						contentPane.repaint();
+						try {
+							int patient = SqlCreation.getPatientId(forename,surname,doB,contact);
+			                int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
+			                System.out.println("FREE LEFT - " + freeLeft);
+			                    if (freeLeft==0){
+			                    	
+			                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "0");
+			                    	SqlCreation.updateAppCost(String.valueOf(appID), costInput);
+			                    	JOptionPane.showMessageDialog(contentPane, "Treatment Added!");
+			                    }
+			                    else  {
+			                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "1");
+			                        SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
+			                        JOptionPane.showMessageDialog(contentPane, "Treatment Added!");
+			                    }
+							
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+	
+						contentPane.removeAll();
+						contentPane.add(appInfo);
+						contentPane.revalidate();
+						contentPane.repaint();
 					}	catch(IllegalArgumentException ec) {
 						JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
 						contentPane.add(appInfo);
 						contentPane.revalidate();
-						contentPane.repaint();}
+						contentPane.repaint();
+					}
+					contentPane.removeAll();
+					contentPane.add(appInfo);
+					contentPane.revalidate();
+					contentPane.repaint();
 				}
 			});
 			
@@ -1781,7 +1784,7 @@ public class MainScreen extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					contentPane.removeAll();
 
-					contentPane.add(toolBar_2, BorderLayout.EAST);
+					contentPane.add(toolBar_3, BorderLayout.EAST);
 					contentPane.add(datePanel, BorderLayout.CENTER);
 					contentPane.add(menuBar, BorderLayout.NORTH);
 					contentPane.setVisible(true);
@@ -1802,7 +1805,7 @@ public class MainScreen extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					contentPane.removeAll();
 
-					contentPane.add(toolBar_2, BorderLayout.EAST);
+					contentPane.add(toolBar_3, BorderLayout.EAST);
 					contentPane.add(datePanel, BorderLayout.CENTER);
 					contentPane.add(menuBar, BorderLayout.NORTH);
 					contentPane.setVisible(true);
@@ -1817,9 +1820,6 @@ public class MainScreen extends JFrame {
 
 		contentPane.add(appInfo);
 		contentPane.setVisible(true);
-		contentPane.revalidate();
-		contentPane.repaint();
-
 		contentPane.revalidate();
 		contentPane.repaint();
 		}

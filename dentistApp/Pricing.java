@@ -115,6 +115,7 @@ public class Pricing extends JFrame {
 			totalCost += Float.valueOf(appointments.get((i*10)+4));
 		}
 		
+		System.out.println("GETTING TOTAL COST: - " + totalCost );
 		
 		return totalCost;
 	}
