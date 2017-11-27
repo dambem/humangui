@@ -814,26 +814,21 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		
 		if (freeRem.next()){
 			if (type=="Check Up"){
-				conn.close();
 				return Integer.valueOf(freeRem.getString(1));
 			}
 			else if (type=="Hygiene"){
 				System.out.println("Checking Hygiene");
-				conn.close();
 				return Integer.valueOf(freeRem.getString(2));
 			}
 			else if (type=="Repair"){
-				conn.close();
 				return Integer.valueOf(freeRem.getString(3));
 			}
 			else{
-				conn.close();
 				return 0;
 			}
 		}
 
 		else{
-			conn.close();
 			return 0;
 		}
 			
@@ -889,7 +884,9 @@ public static List<String> getLastApp(String date, String time) throws Exception
 			current = Float.valueOf(cost.getString(1));
 		
 		int currentI = (int) current;
-		int newCost = (currentI+Integer.valueOf(costInput));
+		float costInputF = Float.valueOf(costInput);
+		int costInputI = (int) costInputF;
+		int newCost = (currentI+costInputI);
 		PreparedStatement updateApp = conn.prepareStatement("UPDATE appointments SET cost = '"+newCost+"' WHERE appointment_id = '"+id+"';");
 		updateApp.executeUpdate();
 		

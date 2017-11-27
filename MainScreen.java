@@ -950,6 +950,7 @@ public class MainScreen extends JFrame {
 							costingInfo.add(new JLabel("Appointment Type: " +  patientApps.get(i*10) )  );
 							costingInfo.add(new JLabel("Date of Appointment: " +  patientApps.get( (i*10)+3 ) ));
 							costingInfo.add(new JLabel("Time: " +  patientApps.get( (i*10)+1 ) ) );
+							costingInfo.add(new JLabel("Cost of appointment: " +  patientApps.get( (i*10)+4 ) ) );
 							costingInfo.add(new JLabel("Partner Performing Procedure: " +  patientApps.get( (i*10)+5 ) ) );
 							
 							String start = patientApps.get( (i*10)+1 );
@@ -1399,7 +1400,7 @@ public class MainScreen extends JFrame {
 
 			appInfo.add(new JLabel("Appointment Time: " + lastApp.get(1) + " - "+ endTime));
 
-			appInfo.add(new JLabel("Base Cost: "  + lastApp.get(3) ));
+			appInfo.add(new JLabel("Current Cost: "  + lastApp.get(3) ));
 
 			JComboBox<String> type = new JComboBox<String>();
 			type.addItem("Check Up");
@@ -1438,6 +1439,9 @@ public class MainScreen extends JFrame {
 					System.out.println(surname);
 					System.out.println(doB);
 					System.out.println(contact);
+					cost.setText("");
+					details.setText("");
+					contentPane.repaint();
 					try {
 						int patient = SqlCreation.getPatientId(forename,surname,doB,contact);
 		                int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
@@ -1446,11 +1450,13 @@ public class MainScreen extends JFrame {
 		                    	
 		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "0");
 		                    	SqlCreation.updateAppCost(String.valueOf(appID), costInput);
+		                    	JOptionPane.showMessageDialog(contentPane, "Treatment Added!");
 		                    }
 		                    else  {
 		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "1");
 		                        SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
 		                        SqlCreation.updateAppCost(String.valueOf(appID), costInput);
+		                        JOptionPane.showMessageDialog(contentPane, "Treatment Added!");
 		                    }
 						
 					} catch (Exception e1) {
@@ -1725,6 +1731,9 @@ public class MainScreen extends JFrame {
 					System.out.println(surname);
 					System.out.println(doB);
 					System.out.println(contact);
+					cost.setText("");
+					details.setText("");
+					contentPane.repaint();
 					try {
 						int patient = SqlCreation.getPatientId(forename,surname,doB,contact);
 		                int freeLeft = SqlCreation.getFreeRemaining(patient, typeInput);
@@ -1733,11 +1742,13 @@ public class MainScreen extends JFrame {
 		                    	
 		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "0");
 		                    	SqlCreation.updateAppCost(String.valueOf(appID), costInput);
+		                    	JOptionPane.showMessageDialog(contentPane, "Treatment Added!");
 		                    }
 		                    else  {
 		                    	SqlCreation.insertTreatmentApp(String.valueOf(appID), costInput, detailsInput, typeInput, "1");
 		                        SqlCreation.updateFreeRemaining(patient,typeInput,freeLeft);
 		                        SqlCreation.updateAppCost(String.valueOf(appID), costInput);
+		                        JOptionPane.showMessageDialog(contentPane, "Treatment Added!");
 		                    }
 						
 					} catch (Exception e1) {
