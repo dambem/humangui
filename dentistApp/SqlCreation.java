@@ -406,21 +406,31 @@ public static int getAppId(String start, String date, String partner) throws Exc
 			
 			Connection conn = getConnection();
 			
-			PreparedStatement registerAddress = conn.prepareStatement("INSERT IGNORE INTO addresses (postcode, street, district, city, house_no) VALUES ('" + postCode + "', '" + street + "', '" + district + "', '" + city + "', " + houseNumber + ");");
-			registerAddress.executeUpdate();
 			
-			System.out.println("ADDRESS REGISTERED");
 			
 			PreparedStatement getAddressID = conn.prepareStatement("SELECT address_id FROM addresses WHERE postcode = '" + postCode + "' AND house_no = " + houseNumber + ";");
 			ResultSet result = getAddressID.executeQuery();
 			
-			String address = null;
+			String address = "0";
 			
 			if(result.next()){
 				address = result.getString(1);
 				System.out.println(address);
 			}
-			System.out.println(address);
+			else {
+	
+				PreparedStatement registerAddress = conn.prepareStatement("INSERT IGNORE INTO addresses (postcode, street, district, city, house_no) VALUES ('" + postCode + "', '" + street + "', '" + district + "', '" + city + "', " + houseNumber + ");");
+				registerAddress.executeUpdate();
+				
+				System.out.println("ADDRESS REGISTERED");
+				
+				ResultSet result2 = getAddressID.executeQuery();
+				
+				if(result2.next()){
+					address = result2.getString(1);
+					System.out.println(address);
+				}
+			}
 			
 			PreparedStatement registerPatient = conn.prepareStatement("INSERT IGNORE INTO patients (address_id, plan_id, title, forename, surname, birth, contact_number) VALUES (" + address + ", " + plan + ", '" + title + "', '" + forename + "', '" + surname + "', '" + birth + "', " + contact + ");");
 			registerPatient.executeUpdate();
