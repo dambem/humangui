@@ -496,6 +496,7 @@ public class MainScreen extends JFrame {
 				regPatient.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
+						try { 
 						String forenameInput = forename.getText();
 						String surnameInput = surname.getText();
 						String titleInput = title.getText();
@@ -509,16 +510,29 @@ public class MainScreen extends JFrame {
 
 						try {
 							SqlCreation.registerPatient(postcodeInput, streetInput, districtInput, cityInput, Integer.parseInt(houseInput), plan.getSelectedIndex(), titleInput, forenameInput, surnameInput, Date.valueOf(birthInput), phoneInput);
-						} catch (Exception e1) {
+						}
+						catch (Exception e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
+						} 
+						
 
 						contentPane.remove(registerForm);
 						contentPane.add(datePanel, BorderLayout.CENTER);
 						contentPane.add(menuBar, BorderLayout.NORTH);
 						setContentPane(contentPane);
 						contentPane.repaint();
+						}catch (NumberFormatException en){
+							JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+							contentPane.add(registerForm);
+							contentPane.revalidate();
+							contentPane.repaint();
+						} 
+						catch(IllegalArgumentException ec) {
+							JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+							contentPane.add(registerForm);
+							contentPane.revalidate();
+							contentPane.repaint();}
 					}
 				});
 				registerForm.add(regPatient);
@@ -788,6 +802,7 @@ public class MainScreen extends JFrame {
 				planSub.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
+						try {
 						String forenameInput = forename.getText();
 						String surnameInput = surname.getText();
 						String birthInput = birth.getText();
@@ -808,6 +823,11 @@ public class MainScreen extends JFrame {
 						contentPane.add(menuBar, BorderLayout.NORTH);
 						contentPane.revalidate();
 						contentPane.repaint();
+						} catch(IllegalArgumentException ec) {
+							JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+							contentPane.add(planInfo);
+							contentPane.revalidate();
+							contentPane.repaint();}
 					}
 				});
 				
@@ -907,6 +927,7 @@ public class MainScreen extends JFrame {
 			pricePatient.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					try {
 					String forenameInput = forename.getText();
 					String surnameInput = surname.getText();
 					String birthInput = birth.getText();
@@ -1020,6 +1041,11 @@ public class MainScreen extends JFrame {
 					}
 					contentPane.revalidate();
 					contentPane.repaint();
+					} catch(IllegalArgumentException ec) {
+						JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+						contentPane.add(pricingInfo);
+						contentPane.revalidate();
+						contentPane.repaint();}
 				}
 			});
 
@@ -1094,6 +1120,7 @@ public class MainScreen extends JFrame {
 			getPatientApp.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					try {
 					String forenameInput = forename.getText();
 					String surnameInput = surname.getText();
 					String birthInput = birth.getText();
@@ -1158,6 +1185,11 @@ public class MainScreen extends JFrame {
 					}
 					contentPane.revalidate();
 					contentPane.repaint();
+					} 	catch(IllegalArgumentException ec) {
+						JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+						contentPane.add(appInfo);
+						contentPane.revalidate();
+						contentPane.repaint();}
 				}
 			});
 
@@ -1262,8 +1294,10 @@ public class MainScreen extends JFrame {
 	List<String> nextApp2 = SqlCreation.getNextApp(partner2, localDateStr2,  sdf2.format(cal2.getTime()), 0 );
 
 	JButton nextAppBtn2 = new JButton("No More Appointments Today ");
-
-
+    LocalDate currentDate = LocalDate.now();  
+	Date today = java.sql.Date.valueOf(currentDate);
+	List<String> day1apps = SqlCreation.getAppsOnDate(today, "2");
+	System.out.println(day1apps);
 	if( nextApp2.size() != 0 ) {
 		nextAppBtn2 = new JButton("Next App: " + nextApp2.get(1));
 		nextAppBtn2.addMouseListener(new MouseAdapter() {
@@ -1683,6 +1717,7 @@ public class MainScreen extends JFrame {
 			pricePatient.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					try {
 					String typeInput = type.getSelectedItem().toString();
 					String detailsInput = details.getText();
 					String costInput = cost.getText();
@@ -1714,6 +1749,11 @@ public class MainScreen extends JFrame {
 					contentPane.add(appInfo);
 					contentPane.revalidate();
 					contentPane.repaint();
+					}	catch(IllegalArgumentException ec) {
+						JOptionPane.showMessageDialog(contentPane, "Not All Fields Completed!");
+						contentPane.add(appInfo);
+						contentPane.revalidate();
+						contentPane.repaint();}
 				}
 			});
 			

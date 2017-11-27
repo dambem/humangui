@@ -387,6 +387,8 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							contentPane1.remove(holidayForm);
+							try {
+							
 							Date dateInput = Date.valueOf(dateHol.getModel().getYear()+"-"+(dateHol.getModel().getMonth()+1)+"-"+dateHol.getModel().getDay());
 							System.out.println(dateInput);
 							String partnerHolInput = (String)partnerHol.getSelectedItem();
@@ -408,6 +410,11 @@ public static void addAppForm(Container contentPane1, Date currentDate, String u
 							}
 							contentPane1.revalidate();
 							contentPane1.repaint();
+							}catch(IllegalArgumentException ec) {
+								JOptionPane.showMessageDialog(contentPane1, "Not All Fields Completed!");
+								contentPane1.add(holidayForm);
+								contentPane1.revalidate();
+								contentPane1.repaint();}
 						}
 					});
 					JButton calReturn = new JButton("View Calendar");
