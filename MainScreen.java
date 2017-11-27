@@ -928,7 +928,7 @@ public class MainScreen extends JFrame {
 						for (int i=0;i<(totalApps/10);i++){
 							costingInfo.add(new JLabel("Appointment Type: " +  patientApps.get(i*10) )  );
 							costingInfo.add(new JLabel("Date of Appointment: " +  patientApps.get( (i*10)+3 ) ));
-							costingInfo.add(new JLabel("Cost: " +  patientApps.get( (i*10)+4 ) ) );
+							costingInfo.add(new JLabel("Time: " +  patientApps.get( (i*10)+1 ) ) );
 							costingInfo.add(new JLabel("Partner Performing Procedure: " +  patientApps.get( (i*10)+5 ) ) );
 							
 							String start = patientApps.get( (i*10)+1 );

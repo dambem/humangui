@@ -100,6 +100,8 @@ public class SqlCreation {
 			createTreatments.executeUpdate();
 			System.out.println("success treatments");
 			
+			conn.close();
+			
 		}catch(Exception e) {
 			
 			e.printStackTrace();
@@ -141,6 +143,8 @@ public static List<String> getAppsOnDate(Date date, String user) throws Exceptio
 				appointments.add(apps.getString(10));
 			}
 			System.out.println(appointments);
+			
+			conn.close();
 			
 			return appointments;
 			
@@ -250,6 +254,8 @@ public static void deleteData() throws Exception {
 			deleteAddresses.executeUpdate();
 			System.out.println("deleted addresses");
 			
+			conn.close();
+			
 		}catch(Exception e) {
 			
 			e.printStackTrace();
@@ -271,7 +277,7 @@ public static void insertAppointment(int id, String appType, Date date, Time sta
 
 			System.out.println("APPOINTMENT INSERTED");
 			
-			
+			conn.close();
 			
 			
 			
@@ -296,7 +302,7 @@ public static void deleteAppointment(Date date, String time, String partner) thr
 
 		System.out.println("APPOINTMENT DELETED");
 		
-		
+		conn.close();
 		
 		
 		
@@ -332,7 +338,7 @@ public static void deleteAppointment(Date date, String time, String partner) thr
 			
 			
 			System.out.println("All plans inserted");
-			
+			conn.close();
 			
 		}catch(Exception e){
 			
@@ -360,6 +366,7 @@ public static int getPatientId(String forename, String surname, String dOb, Stri
 				id = Integer.valueOf( patient_id.getString(1)  );
 			}
 			System.out.println("GOT PATIENT ID, IT IS - " + id);
+			conn.close();
 			return id;
 		} catch(Exception e){
 			
@@ -382,6 +389,7 @@ public static int getAppId(String start, String date, String partner) throws Exc
 			id = Integer.valueOf( app_id.getString(1)  );
 		}
 		System.out.println("GOT APPOINTMENT ID, IT IS - " + id);
+		conn.close();
 		return id;
 	} catch(Exception e){
 		
@@ -760,7 +768,7 @@ public static List<String> getLastApp(String date, String time) throws Exception
 			appInfo.add(app.getString(10));
 			appInfo.add(app.getString(11));
 	}
-		
+	conn.close();
 	return appInfo;
 	
 	
@@ -789,9 +797,9 @@ public static List<String> getLastApp(String date, String time) throws Exception
 			patientApps.add(patientAppResult.getString(9));
 			patientApps.add(patientAppResult.getString(10));
 		}
-		
+		conn.close();
 		return patientApps;
-
+		
 	}
 	
 	public static int getFreeRemaining(int patient, String type) throws Exception {
@@ -805,20 +813,29 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		ResultSet freeRem = getFree.executeQuery();
 		
 		if (freeRem.next()){
-			if (type=="Check Up")
+			if (type=="Check Up"){
+				conn.close();
 				return Integer.valueOf(freeRem.getString(1));
+			}
 			else if (type=="Hygiene"){
 				System.out.println("Checking Hygiene");
+				conn.close();
 				return Integer.valueOf(freeRem.getString(2));
 			}
-			else if (type=="Repair")
+			else if (type=="Repair"){
+				conn.close();
 				return Integer.valueOf(freeRem.getString(3));
-			else
+			}
+			else{
+				conn.close();
 				return 0;
+			}
 		}
 
-		else
+		else{
+			conn.close();
 			return 0;
+		}
 			
 		
 		
@@ -842,6 +859,8 @@ public static List<String> getLastApp(String date, String time) throws Exception
 			updateFree.executeUpdate();
 		}
 		
+		
+		conn.close();
 	}
 	
 	
@@ -852,7 +871,7 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		PreparedStatement updateInfo = conn.prepareStatement("INSERT IGNORE INTO treatments SET appointment_id='"+id+"', cost = '"+cost+"', treatment_info='"+info+"', treatment_type='"+type+"', prePaid='"+paid+"';");
 		updateInfo.executeUpdate();
 
-		
+		conn.close();
 	}
 	
 	
@@ -873,6 +892,8 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		int newCost = (currentI+Integer.valueOf(costInput));
 		PreparedStatement updateApp = conn.prepareStatement("UPDATE appointments SET cost = '"+newCost+"' WHERE appointment_id = '"+id+"';");
 		updateApp.executeUpdate();
+		
+		conn.close();
 	}
 
 
@@ -895,6 +916,9 @@ public static List<String> getLastApp(String date, String time) throws Exception
 				appointments.add(apps.getString(4));
 			}
 			System.out.println(appointments);
+			
+			
+			conn.close();
 			
 			return appointments;
 			
@@ -933,6 +957,8 @@ public static List<String> getLastApp(String date, String time) throws Exception
 		
 		PreparedStatement insertFree = conn.prepareStatement("UPDATE freeTreatments SET plan_id='" + plan + "', check_ups='" + checkUps + "', hygiene='" + hygiene + "', repairs='" + repairs + "', expiry='"+localDateStr+"' WHERE patient_id='"+patient+"';");
 		insertFree.executeUpdate();
+		
+		conn.close();
 		
 	}
 
