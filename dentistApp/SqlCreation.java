@@ -437,7 +437,7 @@ public static int getAppId(String start, String date, String partner) throws Exc
 			
 			System.out.println("PATIENT REGISTERED");
 			
-			PreparedStatement getPatient = conn.prepareStatement("SELECT patient_id FROM patients WHERE forename = '" + forename + "' AND surname = '" + surname + "' AND address_id = " + result.getString(1) + ";");
+			PreparedStatement getPatient = conn.prepareStatement("SELECT patient_id FROM patients WHERE forename = '" + forename + "' AND surname = '" + surname + "' AND address_id = " + address + ";");
 			ResultSet patient_id = getPatient.executeQuery();
 			
 			String id = null;
